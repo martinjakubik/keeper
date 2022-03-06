@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/martinjakubik/keeper/issues"
   },
-  "homepage": "https://github.com/martinjakubik/keeper#readme"
+  "homepage": "https://github.com/martinjakubik/keeper#readme",
+  "devDependencies": {
+    "electron": "^17.1.0"
+  }
 }
