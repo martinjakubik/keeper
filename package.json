@@ -1,0 +1,19 @@
+{
+  "name": "keeper",
+  "version": "1.0.0",
+  "description": "password keeper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinjakubik/keeper.git"
+  },
+  "author": "martin jakubik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martinjakubik/keeper/issues"
+  },
+  "homepage": "https://github.com/martinjakubik/keeper#readme"
+}
