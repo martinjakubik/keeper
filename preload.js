@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-        fs.readdir('~/.fakekeeper').then((aFiles) => {
+        fs.readdir('/Users/martin/.fakekeeper').then((aFiles) => {
             for (const sFile of aFiles) {
                 addListItem('fileList', sFile)
             }
