@@ -1,8 +1,18 @@
+const handleFileClick = function (oEvent) {
+    const oParagraph = oEvent.target;
+    oParagraph.classList.toggle('expand');
+};
+
 const addListItem = (sSelector, sText) => {
     const oElement = document.getElementById(sSelector);
     if (oElement) {
         const oListElement = document.createElement('li');
-        oListElement.innerHTML = sText;
+        const oParagraph = document.createElement('p');
+        const oAnchor = document.createElement('a');
+        oListElement.appendChild(oParagraph);
+        oParagraph.appendChild(oAnchor);
+        oAnchor.innerText = sText;
+        oAnchor.onclick = handleFileClick;
         oElement.appendChild(oListElement);
     }
 };
