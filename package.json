@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/martinjakubik/keeper#readme",
   "devDependencies": {
-    "electron": "^17.1.0"
+    "electron": "^17.1.0",
+    "eslint": "^8.11.0"
   }
 }
