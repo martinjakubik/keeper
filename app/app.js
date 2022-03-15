@@ -8,7 +8,6 @@ const addListItem = (sSelector, sText) => {
 }
 
 const renderFiles = function (oFS) {
-    
     try {
         oFS.readdir('/Users/martin/.fakekeeper').then((aFiles) => {
             for (const sFile of aFiles) {
