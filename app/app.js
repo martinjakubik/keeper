@@ -51,20 +51,21 @@ const handleFileClick = async function (oEvent) {
     toggleFileContentParagraph(oContentParagraph, sFilename);
 };
 
-const addListItem = (sSelector, sText) => {
+const addListItem = (sSelector, sFilename, sContent) => {
     const oElement = document.getElementById(sSelector);
     if (oElement) {
         const oListElement = document.createElement('li');
         const oFilenameParagraph = document.createElement('p');
-        oFilenameParagraph.id = `filename-${sText}`;
+        oFilenameParagraph.id = `filename-${sFilename}`;
         const oContentParagraph = document.createElement('p');
-        oContentParagraph.id = `content-${sText}`;
+        oContentParagraph.id = `content-${sFilename}`;
         oContentParagraph.classList.add('content');
         const oAnchor = document.createElement('a');
         oListElement.appendChild(oFilenameParagraph);
         oListElement.appendChild(oContentParagraph);
         oFilenameParagraph.appendChild(oAnchor);
-        oAnchor.innerText = sText;
+        oContentParagraph.innerText = sContent;
+        oAnchor.innerText = sFilename;
         oAnchor.onclick = handleFileClick;
         oElement.appendChild(oListElement);
     }
@@ -73,9 +74,10 @@ const addListItem = (sSelector, sText) => {
 const renderFiles = function (oFS) {
     oFileSystem = oFS;
     try {
-        oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
+        oFS.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                addListItem('fileList', sFilename);
+                const sContent = await oFS.readFile(`${sKeeperDirectory}/${sFilename}`);
+                addListItem('fileList', sFilename, sContent);
             }
         });
     } catch (oError) {
