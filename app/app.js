@@ -1,10 +1,24 @@
+const oUtil = require('util');
+const oChildProcess = require('child_process');
+const oProcessExec = oUtil.promisify(oChildProcess.exec);
+
 const sKeeperDirectory = '/Users/martin/.fakekeeper';
 
 const STYLE_EXPAND_PARAGRAPH = 'expand';
+const FILE_EXTENSION_ENCRYPTED = 'asc';
+
 let oFileSystem;
 
 const readFileContent = async function (sFilename) {
-    const sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
+    let sContent = '';
+    let sPassphrase = 'password';
+    if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
+        console.log(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
+        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
+        sContent = stdout;
+    } else {
+        sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
+    }
     return sContent;
 };
 
@@ -27,7 +41,7 @@ const handleFileClick = async function (oEvent) {
     toggleParagraphContent(oContentParagraph, sContent);
 };
 
-const addListItem = (sSelector, sText, sContent) => {
+const addListItem = (sSelector, sText) => {
     const oElement = document.getElementById(sSelector);
     if (oElement) {
         const oListElement = document.createElement('li');
@@ -40,7 +54,6 @@ const addListItem = (sSelector, sText, sContent) => {
         oListElement.appendChild(oFilenameParagraph);
         oListElement.appendChild(oContentParagraph);
         oFilenameParagraph.appendChild(oAnchor);
-        oContentParagraph.innerText = sContent;
         oAnchor.innerText = sText;
         oAnchor.onclick = handleFileClick;
         oElement.appendChild(oListElement);
@@ -52,8 +65,7 @@ const renderFiles = function (oFS) {
     try {
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                const sContent = await readFileContent(sFilename);
-                addListItem('fileList', sFilename, sContent);
+                addListItem('fileList', sFilename);
             }
         });
     } catch (oError) {
