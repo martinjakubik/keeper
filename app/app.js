@@ -9,7 +9,6 @@ const handleFileClick = function (oEvent) {
     const oTarget = oEvent.target;
     const oFilenameParagraph = oTarget.parentElement;
     const sText = oFilenameParagraph.id.substring('filename'.length + 1);
-    console.log(`content-${sText}`);
     const oContentParagraph = document.getElementById(`content-${sText}`);
     oContentParagraph.classList.toggle('expand');
 };
