@@ -1,16 +1,30 @@
 const sKeeperDirectory = '/Users/martin/.fakekeeper';
 
-const readFileContent = async function (oFS, sFilename) {
-    const sContent = await oFS.readFile(`${sKeeperDirectory}/${sFilename}`);
+const STYLE_EXPAND_PARAGRAPH = 'expand';
+let oFileSystem;
+
+const readFileContent = async function (sFilename) {
+    const sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
     return sContent;
 };
 
-const handleFileClick = function (oEvent) {
+const toggleParagraphContent  = function (oContentParagraph, sContent) {
+    if (oContentParagraph.classList.contains(STYLE_EXPAND_PARAGRAPH)) {
+        oContentParagraph.innerText = '';
+        oContentParagraph.classList.remove(STYLE_EXPAND_PARAGRAPH);
+    } else {
+        oContentParagraph.innerText = sContent;
+        oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
+    }
+};
+
+const handleFileClick = async function (oEvent) {
     const oTarget = oEvent.target;
     const oFilenameParagraph = oTarget.parentElement;
-    const sText = oFilenameParagraph.id.substring('filename'.length + 1);
-    const oContentParagraph = document.getElementById(`content-${sText}`);
-    oContentParagraph.classList.toggle('expand');
+    const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
+    const oContentParagraph = document.getElementById(`content-${sFilename}`);
+    const sContent = await readFileContent(sFilename);
+    toggleParagraphContent(oContentParagraph, sContent);
 };
 
 const addListItem = (sSelector, sText, sContent) => {
@@ -34,10 +48,11 @@ const addListItem = (sSelector, sText, sContent) => {
 };
 
 const renderFiles = function (oFS) {
+    oFileSystem = oFS;
     try {
-        oFS.readdir(sKeeperDirectory).then(async (aFiles) => {
+        oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                const sContent = await readFileContent(oFS, sFilename);
+                const sContent = await readFileContent(sFilename);
                 addListItem('fileList', sFilename, sContent);
             }
         });
