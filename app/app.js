@@ -1,5 +1,10 @@
 const sKeeperDirectory = '/Users/martin/.fakekeeper';
 
+const readFileContent = async function (oFS, sFilename) {
+    const sContent = await oFS.readFile(`${sKeeperDirectory}/${sFilename}`);
+    return sContent;
+};
+
 const handleFileClick = function (oEvent) {
     const oTarget = oEvent.target;
     const oFilenameParagraph = oTarget.parentElement;
@@ -32,9 +37,9 @@ const addListItem = (sSelector, sText, sContent) => {
 const renderFiles = function (oFS) {
     try {
         oFS.readdir(sKeeperDirectory).then(async (aFiles) => {
-            for (const sFile of aFiles) {
-                const sContent = await oFS.readFile(`${sKeeperDirectory}/${sFile}`);
-                addListItem('fileList', sFile, sContent);
+            for (const sFilename of aFiles) {
+                const sContent = await readFileContent(oFS, sFilename);
+                addListItem('fileList', sFilename, sContent);
             }
         });
     } catch (oError) {
