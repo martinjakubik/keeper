@@ -1,6 +1,7 @@
 #!/bin/bash
 
 KEEPER_DIR_NAME=~/.fakekeeper
+PASSPHRASE=password
 
 if [[ ! -e $KEEPER_DIR_NAME ]] ; then
     mkdir $KEEPER_DIR_NAME
@@ -12,3 +13,7 @@ echo -e "pokaroo\nMissedHimAgain" > $KEEPER_DIR_NAME/groceries
 echo -e "alfred@wayne.com\nBatmanRules100" > $KEEPER_DIR_NAME/retirement
 echo -e "marty@mcfly.com\n1.21Gigawatts" > $KEEPER_DIR_NAME/energy
 echo -e "j.alfred.prufrock\n04CruellestMonth" > $KEEPER_DIR_NAME/heating
+
+echo -e "__long_content__\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\nabcdefghijklmnopqrstuvwxyz\n" > $KEEPER_DIR_NAME/carwash
+
+gpg -c -a --cipher-algo AES256 $KEEPER_DIR_NAME/insurance
