@@ -22,11 +22,12 @@ const readFileContent = async function (sFilename) {
     return sContent;
 };
 
-const toggleParagraphContent  = function (oContentParagraph, sContent) {
+const toggleFileContentParagraph  = async function (oContentParagraph, sFilename) {
     if (oContentParagraph.classList.contains(STYLE_EXPAND_PARAGRAPH)) {
         oContentParagraph.innerText = '';
         oContentParagraph.classList.remove(STYLE_EXPAND_PARAGRAPH);
     } else {
+        const sContent = await readFileContent(sFilename);
         oContentParagraph.innerText = sContent;
         oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
     }
@@ -37,8 +38,7 @@ const handleFileClick = async function (oEvent) {
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
     const oContentParagraph = document.getElementById(`content-${sFilename}`);
-    const sContent = await readFileContent(sFilename);
-    toggleParagraphContent(oContentParagraph, sContent);
+    toggleFileContentParagraph(oContentParagraph, sFilename);
 };
 
 const addListItem = (sSelector, sText) => {
