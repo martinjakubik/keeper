@@ -13,7 +13,6 @@ const readFileContent = async function (sFilename) {
     let sContent = '';
     let sPassphrase = 'password';
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
-        console.log(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
         const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
         sContent = stdout;
     } else {
