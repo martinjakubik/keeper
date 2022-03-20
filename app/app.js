@@ -11,6 +11,7 @@ const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
 let oNewEntryInput;
+const sPassphrase = 'password';
 
 const validateContent = function (sContent) {
     let sValidatedContent = '';
@@ -23,7 +24,6 @@ const validateContent = function (sContent) {
 const readFileContent = async function (sFilename) {
     let sContent = '';
     let sPlaintextFileContent = '';
-    let sPassphrase = 'password';
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
         const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
         sPlaintextFileContent = stdout;
@@ -31,6 +31,12 @@ const readFileContent = async function (sFilename) {
         sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
     }
     sContent = validateContent(sPlaintextFileContent);
+    return sContent;
+};
+
+const writeFileContent = async function (sFilename, sContent) {
+    const sValidatedContent = validateContent(sContent);
+    await oFileSystem.writeFile(`${sKeeperDirectory}/${sFilename}`, sValidatedContent);
     return sContent;
 };
 
@@ -75,6 +81,7 @@ const addListItem = (sSelector, sText) => {
 const newEntry = function () {
     const sValue = oNewEntryInput.value;
     addListItem('fileList', sValue);
+    writeFileContent(sValue, sValue);
     oNewEntryInput.value = '';
 };
 
