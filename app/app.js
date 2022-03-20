@@ -75,6 +75,7 @@ const addListItem = (sSelector, sText) => {
 const newEntry = function () {
     const sValue = oNewEntryInput.value;
     addListItem('fileList', sValue);
+    oNewEntryInput.value = '';
 };
 
 const addButton = function (sLabel, oParent) {
