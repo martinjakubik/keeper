@@ -1,5 +1,6 @@
 const oUtil = require('util');
 const oChildProcess = require('child_process');
+const { on } = require('events');
 const oProcessExec = oUtil.promisify(oChildProcess.exec);
 
 const sKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -9,6 +10,7 @@ const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
+let oNewEntryInput;
 
 const validateContent = function (sContent) {
     let sValidatedContent = '';
@@ -70,6 +72,30 @@ const addListItem = (sSelector, sText) => {
     }
 };
 
+const newEntry = function () {
+    const sValue = oNewEntryInput.value;
+    addListItem('fileList', sValue);
+};
+
+const addButton = function (sLabel, oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+    const oButton = document.createElement('button');
+    oButton.innerText = sLabel;
+    oParent.appendChild(oButton);
+    return oButton;
+};
+
+const addInput = function (sLabel, oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+    const oInput = document.createElement('input');
+    oParent.appendChild(oInput);
+    return oInput;
+};
+
 const renderApp = function (oFS) {
     oFileSystem = oFS;
     try {
@@ -78,6 +104,9 @@ const renderApp = function (oFS) {
                 addListItem('fileList', sFilename);
             }
         });
+        oNewEntryInput = addInput();
+        const oNewEntryButton = addButton('New');
+        oNewEntryButton.onclick = newEntry;
     } catch (oError) {
         console.error(oError);
     }
