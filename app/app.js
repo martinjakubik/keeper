@@ -6,6 +6,7 @@ const sKeeperDirectory = '/Users/martin/.fakekeeper';
 
 const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
+const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
 
@@ -14,7 +15,9 @@ const readFileContent = async function (sFilename) {
     let sPassphrase = 'password';
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
         const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
-        sContent = stdout;
+        if (stdout.length < MAX_CONTENT_LENGTH) {
+            sContent = stdout;
+        }
     } else {
         sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
     }
