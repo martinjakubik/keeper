@@ -70,7 +70,7 @@ const addListItem = (sSelector, sText) => {
     }
 };
 
-const renderFiles = function (oFS) {
+const renderApp = function (oFS) {
     oFileSystem = oFS;
     try {
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
@@ -83,4 +83,4 @@ const renderFiles = function (oFS) {
     }
 };
 
-exports.renderFiles = renderFiles;
+exports.renderApp = renderApp;
