@@ -10,7 +10,7 @@ const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
-let oNewEntryInput;
+let oAddEntryInput;
 const sPassphrase = 'password';
 
 const validateContent = function (sContent) {
@@ -79,11 +79,11 @@ const addListItem = (sSelector, sFilename, sContent) => {
     }
 };
 
-const newEntry = function () {
-    const sValue = oNewEntryInput.value;
+const handleNewEntry = function () {
+    const sValue = oAddEntryInput.value;
     addListItem('fileList', sValue);
     writeFileContent(sValue, sValue);
-    oNewEntryInput.value = '';
+    oAddEntryInput.value = '';
 };
 
 const addButton = function (sLabel, oParent) {
@@ -114,9 +114,9 @@ const renderApp = function (oFS) {
                 addListItem('fileList', sFilename, sContent);
             }
         });
-        oNewEntryInput = addInput();
-        const oNewEntryButton = addButton('New');
-        oNewEntryButton.onclick = newEntry;
+        oAddEntryInput = addInput();
+        const oAddEntryButton = addButton('Add');
+        oAddEntryButton.onclick = handleNewEntry;
     } catch (oError) {
         console.error(oError);
     }
