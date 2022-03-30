@@ -4,13 +4,14 @@ const { on } = require('events');
 const { get } = require('http');
 const oProcessExec = oUtil.promisify(oChildProcess.exec);
 
-const sKeeperDirectory = '/Users/martin/.fakekeeper';
+const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
 const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
+let oKeeperDirectoryInput;
 let oAddEntryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
@@ -25,24 +26,25 @@ const validateContent = function (sContent) {
     return sValidatedContent;
 };
 
-const readFileContent = async function (sFilename, sPassword) {
+const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) {
     let sContent = '';
     let sPlaintextFileContent = '';
     let sPasswordOrDefault = sPassword ? sPassword : sDefaultPassword;
+    let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
-        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPasswordOrDefault} -d ${sKeeperDirectory}/${sFilename}`);
+        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPasswordOrDefault} -d ${sKeeperDirectoryOrDefault}/${sFilename}`);
         if (stderr && stderr.length > 0) {
             console.error(stderr);
         }
         sPlaintextFileContent = stdout;
     } else {
-        sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
+        sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectoryOrDefault}/${sFilename}`);
     }
     sContent = validateContent(sPlaintextFileContent);
     return sContent;
 };
 
-const writeFileContent = async function (sFilename, sContent) {
+const writeFileContent = async function (sFilename, sContent, sKeeperDirectory) {
     const sValidatedContent = validateContent(sContent);
     await oFileSystem.writeFile(`${sKeeperDirectory}/${sFilename}`, sValidatedContent);
     return sContent;
@@ -50,8 +52,9 @@ const writeFileContent = async function (sFilename, sContent) {
 
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
+    const sKeeperDirectory = oKeeperDirectoryInput.value;
     handlePasswordPopupConfirmButtonClick();
-    const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword);
+    const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
     const oContentParagraph = oPasswordPopupObject.contentParagraph;
     oContentParagraph.innerText = sContent;
     oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
@@ -100,9 +103,10 @@ const handleAddEntryButton = function () {
 };
 
 const handleNewEntry = function () {
+    const sKeeperDirectory = oKeeperDirectoryInput.value;
     const sValue = oAddEntryInput.value;
     addListItem('fileList', sValue);
-    writeFileContent(sValue, sValue);
+    writeFileContent(sValue, sValue, sKeeperDirectory);
     oAddEntryInput.value = '';
 };
 
@@ -201,22 +205,34 @@ const addPasswordPopup = function (oParent) {
     return oPopup;
 };
 
-const renderApp = function (oFS) {
-    oFileSystem = oFS;
+const handleKeeperDirectoryInputChange = function () {
+    const sKeeperDirectory = oKeeperDirectoryInput.value;
+    renderFileList(sKeeperDirectory);
+};
+
+const renderFileList = function (sKeeperDirectory) {
     try {
-        oFS.readdir(sKeeperDirectory).then(async (aFiles) => {
+        oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                const sContent = await oFS.readFile(`${sKeeperDirectory}/${sFilename}`);
+                const sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
                 addListItem('fileList', sFilename, sContent);
             }
         });
-        const oAddEntryButton = addButton('Add');
-        oAddEntryButton.onclick = handleAddEntryButton;
-        oAddEntryPopupObject = addAddEntryPopup();
-        oPasswordPopupObject = addPasswordPopup();
     } catch (oError) {
         console.error(oError);
     }
+};
+
+const renderApp = function (oFS, sKeeperDirectory) {
+    oFileSystem = oFS;
+    let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
+    renderFileList(sKeeperDirectoryOrDefault);
+    oKeeperDirectoryInput = addInput('keeperDirectory');
+    oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
+    const oAddEntryButton = addButton('Add');
+    oAddEntryButton.onclick = handleAddEntryButton;
+    oAddEntryPopupObject = addAddEntryPopup();
+    oPasswordPopupObject = addPasswordPopup();
 };
 
 exports.renderApp = renderApp;
