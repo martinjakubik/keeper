@@ -50,11 +50,11 @@ const writeFileContent = async function (sFilename, sContent) {
 
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
+    handlePasswordPopupConfirmButtonClick();
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword);
     const oContentParagraph = oPasswordPopupObject.contentParagraph;
     oContentParagraph.innerText = sContent;
     oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
-    handlePasswordPopupConfirmButtonClick();
 };
 
 const toggleFileContentParagraph  = async function (oContentParagraph, sFilename) {
