@@ -137,6 +137,13 @@ const addInput = function (sLabel, oParent) {
     return oInput;
 };
 
+const addPasswordInput = function (sLabel, oParent) {
+    const oInput = addInput(sLabel, oParent);
+    oInput.type = 'password';
+
+    return oInput;
+};
+
 const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
     const oPopup = document.createElement('div');
     if (!oParent) {
@@ -199,7 +206,7 @@ const showPasswordPopup = function (oContentParagraph, sFilename) {
 const addPasswordPopup = function (oParent) {
     const oPopup = addPopup(oParent);
 
-    oPopup.passwordInput = addInput('password', oPopup.view);
+    oPopup.passwordInput = addPasswordInput('password', oPopup.view);
     oPopup.confirmButton.onclick = handlePasswordPopupConfirmButtonClick;
 
     return oPopup;
