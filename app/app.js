@@ -210,8 +210,18 @@ const handleKeeperDirectoryInputChange = function () {
     renderFileList(sKeeperDirectory);
 };
 
+const clearList = function (sSelector) {
+    const oListElement = document.getElementById(sSelector);
+    if (oListElement) {
+        while (oListElement.lastChild) {
+            oListElement.removeChild(oListElement.lastChild);
+        }
+    }
+};
+
 const renderFileList = function (sKeeperDirectory) {
     try {
+        clearList('fileList');
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
                 const sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
