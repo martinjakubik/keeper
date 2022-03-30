@@ -12,6 +12,8 @@ const MAX_CONTENT_LENGTH = 1024;
 let oFileSystem;
 let oAddEntryInput;
 let oAddEntryPopup;
+let oPasswordPopup;
+
 const sPassphrase = 'password';
 
 const validateContent = function (sContent) {
@@ -46,6 +48,7 @@ const toggleFileContentParagraph  = async function (oContentParagraph, sFilename
         oContentParagraph.innerText = '';
         oContentParagraph.classList.remove(STYLE_EXPAND_PARAGRAPH);
     } else {
+        showPasswordPopup();
         const sContent = await readFileContent(sFilename);
         oContentParagraph.innerText = sContent;
         oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
@@ -118,12 +121,29 @@ const addInput = function (sLabel, oParent) {
     return oInput;
 };
 
-const addPopup = function (oParent) {
+const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
+    const oPopup = document.createElement('div');
     if (!oParent) {
         oParent = document.body;
     }
-    const oPopup = document.createElement('div');
+    const fnHandleCancelActionDefault = function () {
+        if (oPopup.classList.contains('show')) {
+            oPopup.classList.remove('show');
+        }
+    };
     oPopup.classList.add('popup');
+
+    const oConfirmButton = addButton('Ok', oPopup);
+    if (!fnConfirmAction) {
+        fnConfirmAction = fnHandleCancelActionDefault;
+    }
+    oConfirmButton.onclick = fnConfirmAction;
+
+    const oCancelButton = addButton('Cancel', oPopup);
+    if (!fnCancelAction) {
+        fnCancelAction = fnHandleCancelActionDefault;
+    }
+    oCancelButton.onclick = fnCancelAction;
 
     oParent.appendChild(oPopup);
     return oPopup;
@@ -138,8 +158,19 @@ const addAddEntryPopup = function (oParent) {
 
     const oEntryRepeatPasswordInput = addInput('repeatPassword', oPopup);
 
-    const oConfirmButton = addButton('Ok', oPopup);
-    const oCancelButton = addButton('Cancel', oPopup);
+    return oPopup;
+};
+
+const showPasswordPopup = function () {
+    if (!oPasswordPopup.classList.contains('show')) {
+        oPasswordPopup.classList.add('show');
+    }
+};
+
+const addPasswordPopup = function (oParent) {
+    const oPopup = addPopup(oParent);
+
+    const oPasswordInput = addInput('password', oPopup);
 
     return oPopup;
 };
@@ -156,6 +187,7 @@ const renderApp = function (oFS) {
         const oAddEntryButton = addButton('Add');
         oAddEntryButton.onclick = handleAddEntryButton;
         oAddEntryPopup = addAddEntryPopup();
+        oPasswordPopup = addPasswordPopup();
     } catch (oError) {
         console.error(oError);
     }
