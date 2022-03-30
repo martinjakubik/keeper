@@ -14,7 +14,7 @@ let oAddEntryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
 
-const sPassphrase = 'password';
+const sDefaultPassword = 'password';
 
 const validateContent = function (sContent) {
     let sValidatedContent = '';
@@ -24,11 +24,12 @@ const validateContent = function (sContent) {
     return sValidatedContent;
 };
 
-const readFileContent = async function (sFilename) {
+const readFileContent = async function (sFilename, sPassword) {
     let sContent = '';
     let sPlaintextFileContent = '';
+    let sPasswordOrDefault = sPassword ? sPassword : sDefaultPassword;
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
-        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
+        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPasswordOrDefault} -d ${sKeeperDirectory}/${sFilename}`);
         if (stderr && stderr.length > 0) {
             console.error(stderr);
         }
@@ -52,9 +53,11 @@ const toggleFileContentParagraph  = async function (oContentParagraph, sFilename
         oContentParagraph.classList.remove(STYLE_EXPAND_PARAGRAPH);
     } else {
         showPasswordPopup();
-        const sContent = await readFileContent(sFilename);
-        oContentParagraph.innerText = sContent;
-        oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
+        if (bPopupPasswordEntered) {
+            const sContent = await readFileContent(sFilename);
+            oContentParagraph.innerText = sContent;
+            oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
+        }
     }
 };
 
