@@ -11,8 +11,8 @@ const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
 let oAddEntryInput;
-let oAddEntryPopup;
-let oPasswordPopup;
+let oAddEntryPopupObject = {};
+let oPasswordPopupObject = {};
 
 const sPassphrase = 'password';
 
@@ -84,7 +84,7 @@ const addListItem = (sSelector, sFilename, sContent) => {
 };
 
 const handleAddEntryButton = function () {
-    oAddEntryPopup.classList.toggle('show');
+    oAddEntryPopupObject.view.classList.toggle('show');
 };
 
 const handleNewEntry = function () {
@@ -152,25 +152,25 @@ const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
 const addAddEntryPopup = function (oParent) {
     const oPopup = addPopup(oParent);
 
-    const oEntryNameInput = addInput('entry', oPopup);
+    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopup);
 
-    const oEntryPasswordInput = addInput('password', oPopup);
+    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopup);
 
-    const oEntryRepeatPasswordInput = addInput('repeatPassword', oPopup);
+    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopup);
 
     return oPopup;
 };
 
 const showPasswordPopup = function () {
-    if (!oPasswordPopup.classList.contains('show')) {
-        oPasswordPopup.classList.add('show');
+    if (!oPasswordPopupObject.view.classList.contains('show')) {
+        oPasswordPopupObject.view.classList.add('show');
     }
 };
 
 const addPasswordPopup = function (oParent) {
     const oPopup = addPopup(oParent);
 
-    const oPasswordInput = addInput('password', oPopup);
+    oPasswordPopupObject.passwordInput = addInput('password', oPopup);
 
     return oPopup;
 };
@@ -186,8 +186,8 @@ const renderApp = function (oFS) {
         });
         const oAddEntryButton = addButton('Add');
         oAddEntryButton.onclick = handleAddEntryButton;
-        oAddEntryPopup = addAddEntryPopup();
-        oPasswordPopup = addPasswordPopup();
+        oAddEntryPopupObject.view = addAddEntryPopup();
+        oPasswordPopupObject.view = addPasswordPopup();
     } catch (oError) {
         console.error(oError);
     }
