@@ -7,7 +7,7 @@ const createWindow = () => {
         height: 660,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            devTools: false
+            devTools: true
         }
     });
     win.loadFile('app/index.html');
