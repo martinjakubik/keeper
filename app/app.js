@@ -125,6 +125,13 @@ const addPopup = function (oParent) {
     const oPopup = document.createElement('div');
     oPopup.classList.add('popup');
 
+    oParent.appendChild(oPopup);
+    return oPopup;
+};
+
+const addAddEntryPopup = function (oParent) {
+    const oPopup = addPopup(oParent);
+
     const oEntryNameInput = addInput('entry', oPopup);
 
     const oEntryPasswordInput = addInput('password', oPopup);
@@ -134,7 +141,6 @@ const addPopup = function (oParent) {
     const oConfirmButton = addButton('Ok', oPopup);
     const oCancelButton = addButton('Cancel', oPopup);
 
-    oParent.appendChild(oPopup);
     return oPopup;
 };
 
@@ -149,7 +155,7 @@ const renderApp = function (oFS) {
         });
         const oAddEntryButton = addButton('Add');
         oAddEntryButton.onclick = handleAddEntryButton;
-        oAddEntryPopup = addPopup();
+        oAddEntryPopup = addAddEntryPopup();
     } catch (oError) {
         console.error(oError);
     }
