@@ -29,6 +29,9 @@ const readFileContent = async function (sFilename) {
     let sPlaintextFileContent = '';
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
         const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPassphrase} -d ${sKeeperDirectory}/${sFilename}`);
+        if (stderr && stderr.length > 0) {
+            console.error(stderr);
+        }
         sPlaintextFileContent = stdout;
     } else {
         sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
