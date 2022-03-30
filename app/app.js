@@ -11,6 +11,7 @@ const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
 let oAddEntryInput;
+let oAddEntryPopup;
 const sPassphrase = 'password';
 
 const validateContent = function (sContent) {
@@ -79,6 +80,10 @@ const addListItem = (sSelector, sFilename, sContent) => {
     }
 };
 
+const handleAddEntryButton = function () {
+    oAddEntryPopup.classList.toggle('show');
+};
+
 const handleNewEntry = function () {
     const sValue = oAddEntryInput.value;
     addListItem('fileList', sValue);
@@ -100,9 +105,37 @@ const addInput = function (sLabel, oParent) {
     if (!oParent) {
         oParent = document.body;
     }
+
+    if(sLabel) {
+        const oLabel = document.createElement('p');
+        oLabel.innerText = sLabel;
+        oParent.appendChild(oLabel);
+    }
+
     const oInput = document.createElement('input');
     oParent.appendChild(oInput);
+
     return oInput;
+};
+
+const addPopup = function (oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+    const oPopup = document.createElement('div');
+    oPopup.classList.add('popup');
+
+    const oEntryNameInput = addInput('entry', oPopup);
+
+    const oEntryPasswordInput = addInput('password', oPopup);
+
+    const oEntryRepeatPasswordInput = addInput('repeatPassword', oPopup);
+
+    const oConfirmButton = addButton('Ok', oPopup);
+    const oCancelButton = addButton('Cancel', oPopup);
+
+    oParent.appendChild(oPopup);
+    return oPopup;
 };
 
 const renderApp = function (oFS) {
@@ -114,9 +147,9 @@ const renderApp = function (oFS) {
                 addListItem('fileList', sFilename, sContent);
             }
         });
-        oAddEntryInput = addInput();
         const oAddEntryButton = addButton('Add');
-        oAddEntryButton.onclick = handleNewEntry;
+        oAddEntryButton.onclick = handleAddEntryButton;
+        oAddEntryPopup = addPopup();
     } catch (oError) {
         console.error(oError);
     }

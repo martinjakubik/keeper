@@ -5,3 +5,19 @@
 .expand {
     display: block;
 }
+
+.popup:not(.show) {
+    display: none;
+}
+
+.popup.show {
+    display: block;
+    border: 1px solid black;
+    background-color: white;
+    padding: 16px;
+    position: absolute;
+    top: calc(50% - 240px);
+    left: calc(50% - 280px / 2);
+    height: 240px;
+    width: 280px;
+}
