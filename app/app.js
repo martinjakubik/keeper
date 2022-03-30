@@ -152,17 +152,21 @@ const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
     oCancelButton.onclick = fnCancelAction;
 
     oParent.appendChild(oPopup);
-    return oPopup;
+    return {
+        view: oPopup,
+        confirmButton: oConfirmButton,
+        cancelButton: oCancelButton
+    };
 };
 
 const addAddEntryPopup = function (oParent) {
     const oPopup = addPopup(oParent);
 
-    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopup);
+    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopup.view);
 
-    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopup);
+    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopup.view);
 
-    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopup);
+    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopup.view);
 
     return oPopup;
 };
@@ -176,7 +180,7 @@ const showPasswordPopup = function () {
 const addPasswordPopup = function (oParent) {
     const oPopup = addPopup(oParent);
 
-    oPasswordPopupObject.passwordInput = addInput('password', oPopup);
+    oPasswordPopupObject.passwordInput = addInput('password', oPopup.view);
 
     return oPopup;
 };
@@ -192,8 +196,8 @@ const renderApp = function (oFS) {
         });
         const oAddEntryButton = addButton('Add');
         oAddEntryButton.onclick = handleAddEntryButton;
-        oAddEntryPopupObject.view = addAddEntryPopup();
-        oPasswordPopupObject.view = addPasswordPopup();
+        oAddEntryPopupObject = addAddEntryPopup();
+        oPasswordPopupObject = addPasswordPopup();
     } catch (oError) {
         console.error(oError);
     }
