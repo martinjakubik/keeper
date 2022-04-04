@@ -1,7 +1,5 @@
 const oUtil = require('util');
 const oChildProcess = require('child_process');
-const { on } = require('events');
-const { get } = require('http');
 const oProcessExec = oUtil.promisify(oChildProcess.exec);
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
