@@ -1,7 +1,11 @@
-const oUtil = require('util');
-const oChildProcess = require('child_process');
-const { on } = require('events');
-const { get } = require('http');
+// const oUtil = require('util');
+import { util as oUtil } from 'util';
+// const oChildProcess = require('child_process');
+import  { child_process as oChildProcess } from 'child_process';
+// const { on } = require('events');
+import { on } from 'events';
+// const { get } = require('http');
+import { get } from 'http';
 const oProcessExec = oUtil.promisify(oChildProcess.exec);
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -252,4 +256,5 @@ const renderApp = function (oFS, sKeeperDirectory) {
     oPasswordPopupObject = addPasswordPopup();
 };
 
-exports.renderApp = renderApp;
+// exports.renderApp = renderApp;
+export {renderApp};

@@ -2,7 +2,8 @@
   "name": "keeper",
   "version": "1.0.0",
   "description": "password keeper",
-  "main": "index.js",
+  "main": "common-js-index.cjs",
+  "type": "module",
   "scripts": {
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,7 +30,8 @@
     "eslint": "^8.11.0"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "esm": "^3.2.25"
   },
   "config": {
     "forge": {
