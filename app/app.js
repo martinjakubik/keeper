@@ -1,6 +1,3 @@
-const oUtil = require('util');
-const oChildProcess = require('child_process');
-const oProcessExec = oUtil.promisify(oChildProcess.exec); ``;
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 
