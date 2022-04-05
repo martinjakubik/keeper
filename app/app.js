@@ -1,6 +1,8 @@
 const oUtil = require('util');
 const oChildProcess = require('child_process');
-const oProcessExec = oUtil.promisify(oChildProcess.exec);
+const oProcessExec = oUtil.promisify(oChildProcess.exec); ``;
+const oOpenPgp = require('openpgp');
+const { readFile } = require('fs/promises');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
@@ -30,11 +32,15 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
     let sPasswordOrDefault = sPassword ? sPassword : sDefaultPassword;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
-        const { stdout, stderr } = await oProcessExec(`gpg --batch --passphrase ${sPasswordOrDefault} -d ${sKeeperDirectoryOrDefault}/${sFilename}`);
-        if (stderr && stderr.length > 0) {
-            console.error(stderr);
-        }
-        sPlaintextFileContent = stdout;
+        const sEncryptedFileContent = await readFile(`${sKeeperDirectoryOrDefault}/${sFilename}`, 'utf-8');
+        const oEncryptedMessage = await oOpenPgp.readMessage({
+            armoredMessage: sEncryptedFileContent
+        });
+        const { data: sDecrypted } = await oOpenPgp.decrypt({
+            message: oEncryptedMessage,
+            passwords: sPasswordOrDefault
+        });
+        sPlaintextFileContent = sDecrypted;
     } else {
         sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectoryOrDefault}/${sFilename}`);
     }
