@@ -54,45 +54,27 @@ const writeFileContent = async function (sFilename, sContent, sKeeperDirectory) 
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
-    handlePasswordPopupConfirmButtonClick();
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
-    const oContentParagraph = oPasswordPopupObject.contentParagraph;
-    oContentParagraph.innerText = sContent;
-    oContentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
+    oPasswordPopupObject.contentParagraph.innerText = sContent;
+    oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
 
-const toggleFileContentParagraph  = async function (oContentParagraph, sFilename) {
-    if (oContentParagraph.classList.contains(STYLE_EXPAND_PARAGRAPH)) {
-        oContentParagraph.innerText = '';
-        oContentParagraph.classList.remove(STYLE_EXPAND_PARAGRAPH);
-    } else {
-        oPasswordPopupObject.confirmButton.onclick = usePasswordPopupToReadFile;
-        showPasswordPopup(oContentParagraph, sFilename);
-    }
-};
-
-const handleFileClick = async function (oEvent) {
+const handleFileClick = function (oEvent) {
     const oTarget = oEvent.target;
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
-    const oContentParagraph = document.getElementById(`content-${sFilename}`);
-    toggleFileContentParagraph(oContentParagraph, sFilename);
+    showPasswordPopup(sFilename);
 };
 
-const addListItem = (sSelector, sFilename, sContent) => {
+const addListItem = (sSelector, sFilename) => {
     const oElement = document.getElementById(sSelector);
     if (oElement) {
         const oListElement = document.createElement('li');
         const oFilenameParagraph = document.createElement('p');
         oFilenameParagraph.id = `filename-${sFilename}`;
-        const oContentParagraph = document.createElement('p');
-        oContentParagraph.id = `content-${sFilename}`;
-        oContentParagraph.classList.add('content');
         const oAnchor = document.createElement('a');
         oListElement.appendChild(oFilenameParagraph);
-        oListElement.appendChild(oContentParagraph);
         oFilenameParagraph.appendChild(oAnchor);
-        oContentParagraph.innerText = sContent;
         oAnchor.innerText = sFilename;
         oAnchor.onclick = handleFileClick;
         oElement.appendChild(oListElement);
@@ -145,7 +127,7 @@ const addPasswordInput = function (sLabel, oParent) {
     return oInput;
 };
 
-const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
+const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     const oPopup = document.createElement('div');
     if (!oParent) {
         oParent = document.body;
@@ -178,15 +160,15 @@ const addPopup = function (oParent, fnConfirmAction, fnCancelAction) {
 };
 
 const addAddEntryPopup = function (oParent) {
-    const oPopup = addPopup(oParent);
+    const oPopupObject = addPopupObject(oParent);
 
-    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopup.view);
+    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopupObject.view);
 
-    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopup.view);
+    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopupObject.view);
 
-    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopup.view);
+    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopupObject.view);
 
-    return oPopup;
+    return oPopupObject;
 };
 
 const handlePasswordPopupConfirmButtonClick = function () {
@@ -194,23 +176,29 @@ const handlePasswordPopupConfirmButtonClick = function () {
         oPasswordPopupObject.view.classList.remove('show');
     }
     oPasswordPopupObject.passwordInput.value = '';
+    oPasswordPopupObject.contentParagraph.innerText = '';
 };
 
-const showPasswordPopup = function (oContentParagraph, sFilename) {
+const showPasswordPopup = function (sFilename) {
     if (!oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.add('show');
-        oPasswordPopupObject.contentParagraph = oContentParagraph;
         oPasswordPopupObject.filename = sFilename;
     }
 };
 
 const addPasswordPopup = function (oParent) {
-    const oPopup = addPopup(oParent);
+    const oPopupObject = addPopupObject(oParent);
 
-    oPopup.passwordInput = addPasswordInput('password', oPopup.view);
-    oPopup.confirmButton.onclick = handlePasswordPopupConfirmButtonClick;
+    oPopupObject.passwordInput = addPasswordInput('password', oPopupObject.view);
+    const oShowContentButton = addButton('show', oPopupObject.view);
+    oShowContentButton.onclick = usePasswordPopupToReadFile;
 
-    return oPopup;
+    oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonClick;
+
+    oPopupObject.contentParagraph = document.createElement('p');
+    oPopupObject.view.appendChild(oPopupObject.contentParagraph);
+
+    return oPopupObject;
 };
 
 const handleKeeperDirectoryInputChange = function () {
@@ -232,8 +220,7 @@ const renderFileList = function (sKeeperDirectory) {
         clearList('fileList');
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                const sContent = await oFileSystem.readFile(`${sKeeperDirectory}/${sFilename}`);
-                addListItem('fileList', sFilename, sContent);
+                addListItem('fileList', sFilename);
             }
         });
     } catch (oError) {
