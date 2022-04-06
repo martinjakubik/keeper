@@ -33,11 +33,15 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
         const oEncryptedMessage = await oOpenPgp.readMessage({
             armoredMessage: sEncryptedFileContent
         });
-        const { data: sDecrypted } = await oOpenPgp.decrypt({
-            message: oEncryptedMessage,
-            passwords: sPasswordOrDefault
-        });
-        sPlaintextFileContent = sDecrypted;
+        try {
+            const { data: sDecrypted } = await oOpenPgp.decrypt({
+                message: oEncryptedMessage,
+                passwords: sPasswordOrDefault
+            });
+            sPlaintextFileContent = sDecrypted;
+        } catch (error) {
+            sPlaintextFileContent = '';
+        }
     } else {
         sPlaintextFileContent = await oFileSystem.readFile(`${sKeeperDirectoryOrDefault}/${sFilename}`);
     }
