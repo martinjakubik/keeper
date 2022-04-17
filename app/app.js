@@ -9,7 +9,6 @@ const MAX_CONTENT_LENGTH = 1024;
 
 let oFileSystem;
 let oKeeperDirectoryInput;
-let oAddEntryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
 
@@ -49,12 +48,6 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
     return sContent;
 };
 
-const writeFileContent = async function (sFilename, sContent, sKeeperDirectory) {
-    const sValidatedContent = validateContent(sContent);
-    await oFileSystem.writeFile(`${sKeeperDirectory}/${sFilename}`, sValidatedContent);
-    return sContent;
-};
-
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
@@ -87,14 +80,6 @@ const addListItem = (sSelector, sFilename) => {
 
 const handleAddEntryButton = function () {
     oAddEntryPopupObject.view.classList.toggle('show');
-};
-
-const handleNewEntry = function () {
-    const sKeeperDirectory = oKeeperDirectoryInput.value;
-    const sValue = oAddEntryInput.value;
-    addListItem('fileList', sValue);
-    writeFileContent(sValue, sValue, sKeeperDirectory);
-    oAddEntryInput.value = '';
 };
 
 const addButton = function (sLabel, oParent) {
