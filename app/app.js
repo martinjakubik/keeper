@@ -189,6 +189,11 @@ const addPasswordPopup = function (oParent) {
     oPopupObject.passwordInput = addPasswordInput('password', oPopupObject.view);
     const oShowContentButton = addButton('show', oPopupObject.view);
     oShowContentButton.onclick = usePasswordPopupToReadFile;
+    oPopupObject.passwordInput.onkeydown = oEvent => {
+        if (oEvent.key === 'Enter') {
+            oShowContentButton.click();
+        }
+    };
 
     oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonPressed;
     oPopupObject.cancelButton.onclick = handlePasswordPopupCancelButtonPressed;
