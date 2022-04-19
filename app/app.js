@@ -121,7 +121,7 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     if (!oParent) {
         oParent = document.body;
     }
-    const fnHandleCancelActionDefault = function () {
+    const fnHandleCloseActionDefault = function () {
         if (oPopup.classList.contains('show')) {
             oPopup.classList.remove('show');
         }
@@ -130,13 +130,13 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
 
     const oConfirmButton = addButton('Ok', oPopup);
     if (!fnConfirmAction) {
-        fnConfirmAction = fnHandleCancelActionDefault;
+        fnConfirmAction = fnHandleCloseActionDefault;
     }
     oConfirmButton.onclick = fnConfirmAction;
 
     const oCancelButton = addButton('Cancel', oPopup);
     if (!fnCancelAction) {
-        fnCancelAction = fnHandleCancelActionDefault;
+        fnCancelAction = fnHandleCloseActionDefault;
     }
     oCancelButton.onclick = fnCancelAction;
 
@@ -168,6 +168,14 @@ const handlePasswordPopupConfirmButtonPressed = function () {
     oPasswordPopupObject.contentParagraph.innerText = '';
 };
 
+const handlePasswordPopupCancelButtonPressed = function () {
+    if (oPasswordPopupObject.view.classList.contains('show')) {
+        oPasswordPopupObject.view.classList.remove('show');
+    }
+    oPasswordPopupObject.passwordInput.value = '';
+    oPasswordPopupObject.contentParagraph.innerText = '';
+};
+
 const showPasswordPopup = function (sFilename) {
     if (!oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.add('show');
@@ -183,6 +191,7 @@ const addPasswordPopup = function (oParent) {
     oShowContentButton.onclick = usePasswordPopupToReadFile;
 
     oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonPressed;
+    oPopupObject.cancelButton.onclick = handlePasswordPopupCancelButtonPressed;
 
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
