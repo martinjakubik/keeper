@@ -56,7 +56,7 @@ const usePasswordPopupToReadFile = async function () {
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
 
-const handleFileClick = function (oEvent) {
+const handleFilePressed = function (oEvent) {
     const oTarget = oEvent.target;
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
@@ -73,7 +73,7 @@ const addListItem = (sSelector, sFilename) => {
         oListElement.appendChild(oFilenameParagraph);
         oFilenameParagraph.appendChild(oAnchor);
         oAnchor.innerText = sFilename;
-        oAnchor.onclick = handleFileClick;
+        oAnchor.onclick = handleFilePressed;
         oElement.appendChild(oListElement);
     }
 };
@@ -160,7 +160,7 @@ const addAddEntryPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handlePasswordPopupConfirmButtonClick = function () {
+const handlePasswordPopupConfirmButtonPressed = function () {
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
@@ -182,7 +182,7 @@ const addPasswordPopup = function (oParent) {
     const oShowContentButton = addButton('show', oPopupObject.view);
     oShowContentButton.onclick = usePasswordPopupToReadFile;
 
-    oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonClick;
+    oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonPressed;
 
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
