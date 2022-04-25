@@ -24,6 +24,7 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
-ipcMain.handle('showOpenDialog', () => {
-    dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
+ipcMain.handle('showOpenDialog', async (oEvent) => {
+    const sSelectedDirectory = await dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
+    oEvent.returnValue = sSelectedDirectory;
 });

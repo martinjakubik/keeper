@@ -207,8 +207,10 @@ const handleKeeperDirectoryInputChange = function () {
     renderFileList(sKeeperDirectory);
 };
 
-const handleChooseKeeperDirectoryButtonTapped = function () {
-    ipcRenderer.invoke('showOpenDialog');
+const handleChooseKeeperDirectoryButtonTapped = async function () {
+    const sSelectedDirectory = await ipcRenderer.invoke('showOpenDialog');
+    console.log(sSelectedDirectory);
+    oKeeperDirectoryInput.value = sSelectedDirectory;
 };
 
 const clearList = function (sSelector) {
