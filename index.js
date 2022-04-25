@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
@@ -22,4 +22,8 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.handle('showOpenDialog', () => {
+    dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
 });
