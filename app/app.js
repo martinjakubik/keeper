@@ -78,10 +78,6 @@ const addListItem = (sSelector, sFilename) => {
     }
 };
 
-const handleAddEntryButton = function () {
-    oAddEntryPopupObject.view.classList.toggle('show');
-};
-
 const addButton = function (sLabel, oParent) {
     if (!oParent) {
         oParent = document.body;
@@ -237,8 +233,6 @@ const renderApp = function (oFS, sKeeperDirectory) {
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
-    const oAddEntryButton = addButton('Add');
-    oAddEntryButton.onclick = handleAddEntryButton;
     oAddEntryPopupObject = addAddEntryPopup();
     oPasswordPopupObject = addPasswordPopup();
 };
