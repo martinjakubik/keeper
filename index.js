@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
@@ -7,7 +7,7 @@ const createWindow = () => {
         height: 660,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            devTools: false
+            devTools: !app.isPackaged
         }
     });
     win.loadFile('app/index.html');
@@ -22,4 +22,9 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.handle('showOpenDialog', async (oEvent) => {
+    const sSelectedDirectory = await dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
+    oEvent.returnValue = sSelectedDirectory;
 });
