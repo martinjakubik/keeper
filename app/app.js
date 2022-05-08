@@ -1,5 +1,6 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
+const { start } = require('repl');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
@@ -13,6 +14,8 @@ let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
 let nPasswordPopupCloseTimeout = -1;
+let nPasswordPopupCloseCountdownInterval = -1;
+let nPasswordPopupCloseCountdown = -1;
 
 const sDefaultPassword = 'password';
 
@@ -50,11 +53,17 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
     return sContent;
 };
 
+const startPasswordPopupCountdown = function () {
+    nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
+    nPasswordPopupCloseTimeout = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    nPasswordPopupCloseCountdownInterval = setInterval(handlePasswordPopupCountdownInterval, 1000);
+};
+
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
-    nPasswordPopupCloseTimeout = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    startPasswordPopupCountdown();
     oPasswordPopupObject.contentParagraph.innerText = sContent;
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
@@ -160,6 +169,8 @@ const addAddEntryPopup = function (oParent) {
 };
 
 const closePasswordPopup = function () {
+    clearTimeout(nPasswordPopupCloseTimeout);
+    clearInterval(nPasswordPopupCloseCountdownInterval);
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
@@ -167,8 +178,12 @@ const closePasswordPopup = function () {
     oPasswordPopupObject.contentParagraph.innerText = '';
 };
 
+const handlePasswordPopupCountdownInterval = function () {
+    nPasswordPopupCloseCountdown--;
+    console.log(nPasswordPopupCloseCountdown);
+};
+
 const handlePasswordPopupTimeoutExpired = function () {
-    clearTimeout(nPasswordPopupCloseTimeout);
     closePasswordPopup();
 };
 
