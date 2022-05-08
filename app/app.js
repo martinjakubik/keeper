@@ -6,11 +6,13 @@ const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
+const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 
 let oFileSystem;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
+let nPasswordPopupCloseTimeout = -1;
 
 const sDefaultPassword = 'password';
 
@@ -52,6 +54,7 @@ const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
+    nPasswordPopupCloseTimeout = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
     oPasswordPopupObject.contentParagraph.innerText = sContent;
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
@@ -162,6 +165,11 @@ const closePasswordPopup = function () {
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
+};
+
+const handlePasswordPopupTimeoutExpired = function () {
+    clearTimeout(nPasswordPopupCloseTimeout);
+    closePasswordPopup();
 };
 
 const handlePasswordPopupConfirmButtonPressed = function () {
