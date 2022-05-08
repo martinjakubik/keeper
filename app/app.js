@@ -15,7 +15,7 @@ let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
 let nPasswordPopupCloseTimeout = -1;
 let nPasswordPopupCloseCountdownInterval = -1;
-let nPasswordPopupCloseCountdown = -1;
+let nPasswordPopupCloseCountdown = 0;
 
 const sDefaultPassword = 'password';
 
@@ -176,6 +176,7 @@ const closePasswordPopup = function () {
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
+    oPasswordPopupObject.countdownParagraph.style.width = 0;
 };
 
 const handlePasswordPopupCountdownInterval = function () {
@@ -223,6 +224,7 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.countdownParagraph = document.createElement('p');
     oPopupObject.countdownParagraph.classList.add('countdown');
+    oPopupObject.countdownParagraph.style.width = 0;
     oPopupObject.view.appendChild(oPopupObject.countdownParagraph);
 
     return oPopupObject;
