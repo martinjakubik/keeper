@@ -180,7 +180,8 @@ const closePasswordPopup = function () {
 
 const handlePasswordPopupCountdownInterval = function () {
     nPasswordPopupCloseCountdown--;
-    console.log(nPasswordPopupCloseCountdown);
+    const nPercent = Math.floor(nPasswordPopupCloseCountdown * 100 / PASSWORD_POPUP_TIMEOUT_SECONDS);
+    oPasswordPopupObject.countdownParagraph.style.width = `${nPercent}%`;
 };
 
 const handlePasswordPopupTimeoutExpired = function () {
@@ -219,6 +220,10 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
+
+    oPopupObject.countdownParagraph = document.createElement('p');
+    oPopupObject.countdownParagraph.classList.add('countdown');
+    oPopupObject.view.appendChild(oPopupObject.countdownParagraph);
 
     return oPopupObject;
 };
