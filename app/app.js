@@ -156,7 +156,7 @@ const addAddEntryPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handlePasswordPopupConfirmButtonPressed = function () {
+const closePasswordPopup = function () {
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
@@ -164,12 +164,12 @@ const handlePasswordPopupConfirmButtonPressed = function () {
     oPasswordPopupObject.contentParagraph.innerText = '';
 };
 
+const handlePasswordPopupConfirmButtonPressed = function () {
+    closePasswordPopup();
+};
+
 const handlePasswordPopupCancelButtonPressed = function () {
-    if (oPasswordPopupObject.view.classList.contains('show')) {
-        oPasswordPopupObject.view.classList.remove('show');
-    }
-    oPasswordPopupObject.passwordInput.value = '';
-    oPasswordPopupObject.contentParagraph.innerText = '';
+    closePasswordPopup();
 };
 
 const showPasswordPopup = function (sFilename) {
