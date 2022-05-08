@@ -21,3 +21,8 @@
     height: 240px;
     width: 280px;
 }
+
+.popup>.countdown {
+    height: 10px;
+    background-color: rgb(175, 175, 175);
+}

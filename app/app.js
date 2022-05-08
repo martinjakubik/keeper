@@ -1,18 +1,21 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
-const { ipcRenderer } = require('electron');
-const { BrowserWindow } = require('electron');
+const { start } = require('repl');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
 const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
+const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 
 let oFileSystem;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
+let nPasswordPopupCloseTimeout = -1;
+let nPasswordPopupCloseCountdownInterval = -1;
+let nPasswordPopupCloseCountdown = 0;
 
 const sDefaultPassword = 'password';
 
@@ -50,10 +53,17 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
     return sContent;
 };
 
+const startPasswordPopupCountdown = function () {
+    nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
+    nPasswordPopupCloseTimeout = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    nPasswordPopupCloseCountdownInterval = setInterval(handlePasswordPopupCountdownInterval, 1000);
+};
+
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
+    startPasswordPopupCountdown();
     oPasswordPopupObject.contentParagraph.innerText = sContent;
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
@@ -158,20 +168,33 @@ const addAddEntryPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handlePasswordPopupConfirmButtonPressed = function () {
+const closePasswordPopup = function () {
+    clearTimeout(nPasswordPopupCloseTimeout);
+    clearInterval(nPasswordPopupCloseCountdownInterval);
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
+    oPasswordPopupObject.countdownParagraph.style.width = 0;
+};
+
+const handlePasswordPopupCountdownInterval = function () {
+    nPasswordPopupCloseCountdown--;
+    const nPercent = Math.floor(nPasswordPopupCloseCountdown * 100 / PASSWORD_POPUP_TIMEOUT_SECONDS);
+    oPasswordPopupObject.countdownParagraph.style.width = `${nPercent}%`;
+};
+
+const handlePasswordPopupTimeoutExpired = function () {
+    closePasswordPopup();
+};
+
+const handlePasswordPopupConfirmButtonPressed = function () {
+    closePasswordPopup();
 };
 
 const handlePasswordPopupCancelButtonPressed = function () {
-    if (oPasswordPopupObject.view.classList.contains('show')) {
-        oPasswordPopupObject.view.classList.remove('show');
-    }
-    oPasswordPopupObject.passwordInput.value = '';
-    oPasswordPopupObject.contentParagraph.innerText = '';
+    closePasswordPopup();
 };
 
 const showPasswordPopup = function (sFilename) {
@@ -199,18 +222,17 @@ const addPasswordPopup = function (oParent) {
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
 
+    oPopupObject.countdownParagraph = document.createElement('p');
+    oPopupObject.countdownParagraph.classList.add('countdown');
+    oPopupObject.countdownParagraph.style.width = 0;
+    oPopupObject.view.appendChild(oPopupObject.countdownParagraph);
+
     return oPopupObject;
 };
 
 const handleKeeperDirectoryInputChange = function () {
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     renderFileList(sKeeperDirectory);
-};
-
-const handleChooseKeeperDirectoryButtonTapped = async function () {
-    const sSelectedDirectory = await ipcRenderer.invoke('showOpenDialog');
-    console.log(sSelectedDirectory);
-    oKeeperDirectoryInput.value = sSelectedDirectory;
 };
 
 const clearList = function (sSelector) {
@@ -241,8 +263,6 @@ const renderApp = function (oFS, sKeeperDirectory) {
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
-    const oChooseKeeperDirectoryButton = addButton('Select...');
-    oChooseKeeperDirectoryButton.onclick = handleChooseKeeperDirectoryButtonTapped;
     oAddEntryPopupObject = addAddEntryPopup();
     oPasswordPopupObject = addPasswordPopup();
 };
