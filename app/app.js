@@ -12,8 +12,8 @@ let oFileSystem;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
-let nPasswordPopupCloseTimeout = -1;
-let nPasswordPopupCloseCountdownInterval = -1;
+let nPasswordPopupCloseTimeoutId = -1;
+let nPasswordPopupCloseCountdownIntervalId = -1;
 let nPasswordPopupCloseCountdown = 0;
 
 const sDefaultPassword = 'password';
@@ -54,8 +54,8 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
 
 const startPasswordPopupCountdown = function () {
     nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
-    nPasswordPopupCloseTimeout = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
-    nPasswordPopupCloseCountdownInterval = setInterval(handlePasswordPopupCountdownInterval, 1000);
+    nPasswordPopupCloseTimeoutId = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    nPasswordPopupCloseCountdownIntervalId = setInterval(handlePasswordPopupCountdownInterval, 1000);
 };
 
 const usePasswordPopupToReadFile = async function () {
@@ -168,8 +168,8 @@ const addAddEntryPopup = function (oParent) {
 };
 
 const closePasswordPopup = function () {
-    clearTimeout(nPasswordPopupCloseTimeout);
-    clearInterval(nPasswordPopupCloseCountdownInterval);
+    clearTimeout(nPasswordPopupCloseTimeoutId);
+    clearInterval(nPasswordPopupCloseCountdownIntervalId);
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
