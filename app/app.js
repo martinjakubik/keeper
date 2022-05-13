@@ -175,13 +175,13 @@ const closePasswordPopup = function () {
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
-    oPasswordPopupObject.countdownParagraph.style.width = 0;
+    oPasswordPopupObject.countdownDiv.style.width = 0;
 };
 
 const handlePasswordPopupCountdownInterval = function () {
     nPasswordPopupCloseCountdown--;
     const nPercent = Math.floor(nPasswordPopupCloseCountdown * 100 / PASSWORD_POPUP_TIMEOUT_SECONDS);
-    oPasswordPopupObject.countdownParagraph.style.width = `${nPercent}%`;
+    oPasswordPopupObject.countdownDiv.style.width = `${nPercent}%`;
 };
 
 const handlePasswordPopupTimeoutExpired = function () {
@@ -221,10 +221,10 @@ const addPasswordPopup = function (oParent) {
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
 
-    oPopupObject.countdownParagraph = document.createElement('p');
-    oPopupObject.countdownParagraph.classList.add('countdown');
-    oPopupObject.countdownParagraph.style.width = 0;
-    oPopupObject.view.appendChild(oPopupObject.countdownParagraph);
+    oPopupObject.countdownDiv = document.createElement('div');
+    oPopupObject.countdownDiv.classList.add('countdown');
+    oPopupObject.countdownDiv.style.width = 0;
+    oPopupObject.view.appendChild(oPopupObject.countdownDiv);
 
     return oPopupObject;
 };
