@@ -202,16 +202,30 @@ const addPasswordPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handleKeeperDirectoryInputChange = function () {
+const handleKeeperDirectoryChange = function () {
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     renderFileList(sKeeperDirectory);
 };
 
-const handleChooseKeeperDirectoryButtonTapped = async function () {
-    const sSelectedDirectory = await ipcRenderer.invoke('showOpenDialog');
-    console.log(sSelectedDirectory);
-    oKeeperDirectoryInput.value = sSelectedDirectory;
+const handleKeeperDirectoryInputChange = function () {
+    handleKeeperDirectoryChange();
 };
+
+const handleChooseKeeperDirectoryButtonTapped = async function () {
+    console.log('selecting directory');
+    ipcRenderer.send('showOpenDialog');
+};
+
+ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
+    console.log(`selected directory: ${oArgument}`);
+    const sSelectedDirectory = (oArgument && !oArgument.canceled) ? oArgument.selectedDirectory : null;
+    if (sSelectedDirectory) {
+        oKeeperDirectoryInput.value = sSelectedDirectory;
+    } else {
+        oKeeperDirectoryInput.value = '';
+    }
+    handleKeeperDirectoryChange();
+});
 
 const clearList = function (sSelector) {
     const oListElement = document.getElementById(sSelector);

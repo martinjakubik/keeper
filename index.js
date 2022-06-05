@@ -24,7 +24,13 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
-ipcMain.handle('showOpenDialog', async (oEvent) => {
-    const sSelectedDirectory = await dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
-    oEvent.returnValue = sSelectedDirectory;
+ipcMain.on('showOpenDialog', async (oEvent) => {
+    const oSelectedDirectory = await dialog.showOpenDialog({properties: ['openDirectory', 'showHiddenFiles']});
+    if (oSelectedDirectory.canceled) {
+        oEvent.reply('choose-keeper-directory-response', { canceled: true });
+    } else {
+        const aSelectedDirectories =  oSelectedDirectory.filePaths;
+        const sSelectedDirectory = (aSelectedDirectories && aSelectedDirectories.length > 0) ? aSelectedDirectories[0] : null;
+        oEvent.reply('choose-keeper-directory-response', { selectedDirectory: sSelectedDirectory });
+    }
 });
