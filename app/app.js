@@ -8,11 +8,15 @@ const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
+const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 
 let oFileSystem;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
+let nPasswordPopupCloseTimeoutId = -1;
+let nPasswordPopupCloseCountdownIntervalId = -1;
+let nPasswordPopupCloseCountdown = 0;
 
 const sDefaultPassword = 'password';
 
@@ -50,10 +54,17 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
     return sContent;
 };
 
+const startPasswordPopupCountdown = function () {
+    nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
+    nPasswordPopupCloseTimeoutId = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    nPasswordPopupCloseCountdownIntervalId = setInterval(handlePasswordPopupCountdownInterval, 1000);
+};
+
 const usePasswordPopupToReadFile = async function () {
     const sPassword = oPasswordPopupObject.passwordInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     const sContent = await readFileContent(oPasswordPopupObject.filename, sPassword, sKeeperDirectory);
+    startPasswordPopupCountdown();
     oPasswordPopupObject.contentParagraph.innerText = sContent;
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
@@ -158,20 +169,33 @@ const addAddEntryPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handlePasswordPopupConfirmButtonPressed = function () {
+const closePasswordPopup = function () {
+    clearTimeout(nPasswordPopupCloseTimeoutId);
+    clearInterval(nPasswordPopupCloseCountdownIntervalId);
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
+    oPasswordPopupObject.countdownDiv.style.width = 0;
+};
+
+const handlePasswordPopupCountdownInterval = function () {
+    nPasswordPopupCloseCountdown--;
+    const nPercent = Math.floor(nPasswordPopupCloseCountdown * 100 / PASSWORD_POPUP_TIMEOUT_SECONDS);
+    oPasswordPopupObject.countdownDiv.style.width = `${nPercent}%`;
+};
+
+const handlePasswordPopupTimeoutExpired = function () {
+    closePasswordPopup();
+};
+
+const handlePasswordPopupConfirmButtonPressed = function () {
+    closePasswordPopup();
 };
 
 const handlePasswordPopupCancelButtonPressed = function () {
-    if (oPasswordPopupObject.view.classList.contains('show')) {
-        oPasswordPopupObject.view.classList.remove('show');
-    }
-    oPasswordPopupObject.passwordInput.value = '';
-    oPasswordPopupObject.contentParagraph.innerText = '';
+    closePasswordPopup();
 };
 
 const showPasswordPopup = function (sFilename) {
@@ -198,6 +222,11 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.contentParagraph = document.createElement('p');
     oPopupObject.view.appendChild(oPopupObject.contentParagraph);
+
+    oPopupObject.countdownDiv = document.createElement('div');
+    oPopupObject.countdownDiv.classList.add('countdown');
+    oPopupObject.countdownDiv.style.width = 0;
+    oPopupObject.view.appendChild(oPopupObject.countdownDiv);
 
     return oPopupObject;
 };
