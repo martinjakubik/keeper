@@ -240,12 +240,10 @@ const handleKeeperDirectoryInputChange = function () {
 };
 
 const handleChooseKeeperDirectoryButtonTapped = async function () {
-    console.log('selecting directory');
     ipcRenderer.send('showOpenDialog');
 };
 
 ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
-    console.log(`selected directory: ${oArgument}`);
     const sSelectedDirectory = (oArgument && !oArgument.canceled) ? oArgument.selectedDirectory : null;
     if (sSelectedDirectory) {
         oKeeperDirectoryInput.value = sSelectedDirectory;
