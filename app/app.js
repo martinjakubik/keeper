@@ -70,9 +70,10 @@ const usePasswordPopupToReadFile = async function () {
 
 const handleFilePressed = function (oEvent) {
     const oTarget = oEvent.target;
+    const nPageVerticalOffset = oEvent.pageY;
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
-    showPasswordPopup(sFilename);
+    showPasswordPopup(sFilename, nPageVerticalOffset);
 };
 
 const addListItem = (sSelector, sFilename) => {
@@ -197,8 +198,9 @@ const handlePasswordPopupCancelButtonPressed = function () {
     closePasswordPopup();
 };
 
-const showPasswordPopup = function (sFilename) {
+const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
     if (!oPasswordPopupObject.view.classList.contains('show')) {
+        oPasswordPopupObject.view.style.top = nPageVerticalOffset;
         oPasswordPopupObject.view.classList.add('show');
         oPasswordPopupObject.filename = sFilename;
     }
