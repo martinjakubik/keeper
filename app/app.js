@@ -55,8 +55,11 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
 
 const startPasswordPopupCountdown = function () {
     nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
-    nPasswordPopupCloseTimeoutId = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS  * 1000);
+    nPasswordPopupCloseTimeoutId = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS * 1000);
     nPasswordPopupCloseCountdownIntervalId = setInterval(handlePasswordPopupCountdownInterval, 1000);
+    const sShape = getShape(PASSWORD_POPUP_TIMEOUT_SECONDS, PASSWORD_POPUP_TIMEOUT_SECONDS);
+    oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
+    oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(175, 175, 175)';
 };
 
 const usePasswordPopupToReadFile = async function () {
@@ -177,13 +180,39 @@ const closePasswordPopup = function () {
     }
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
-    oPasswordPopupObject.countdownDiv.style.width = 0;
+    oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(255, 255, 255)';
+};
+
+const getFormattedPoint = function (aPoint, index, nNumberOfPoints) {
+    const nScale = 20;
+    const nIncrement = index * 2 * Math.PI / nNumberOfPoints - Math.PI / 2;
+    const nCosine = Math.cos(nIncrement);
+    const nSine = Math.sin(nIncrement);
+    return Math.floor(aPoint[0] + nCosine * nScale) + 'px ' + Math.floor(aPoint[1] + nSine * nScale) + 'px';
+};
+
+const getShape = function (nTicks, nTotalTicks) {
+    const nNumberOfPoints = 30;
+    const aStartPoint = [80, 30];
+    let aFormattedPoints = [];
+    const nTicksByPoints = Math.floor(nTotalTicks / nNumberOfPoints);
+    aFormattedPoints.push(getFormattedPoint(aStartPoint, 0, nNumberOfPoints));
+    aFormattedPoints.push(Math.floor(aStartPoint[0]) + 'px ' + Math.floor(aStartPoint[1]) + 'px');
+    if (nTicks > 0) {
+        for (let nPoint = 1; nPoint < nNumberOfPoints; nPoint++) {
+            if (nTicks < nPoint * nTicksByPoints) {
+                aFormattedPoints.push(getFormattedPoint(aStartPoint, nPoint, nNumberOfPoints));
+            }
+        }
+    }
+    const sShapePoints = aFormattedPoints.join(',');
+    return 'polygon(' + sShapePoints + ')';
 };
 
 const handlePasswordPopupCountdownInterval = function () {
     nPasswordPopupCloseCountdown--;
-    const nPercent = Math.floor(nPasswordPopupCloseCountdown * 100 / PASSWORD_POPUP_TIMEOUT_SECONDS);
-    oPasswordPopupObject.countdownDiv.style.width = `${nPercent}%`;
+    const sShape = getShape((PASSWORD_POPUP_TIMEOUT_SECONDS - nPasswordPopupCloseCountdown), PASSWORD_POPUP_TIMEOUT_SECONDS);
+    oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
 };
 
 const handlePasswordPopupTimeoutExpired = function () {
@@ -226,7 +255,6 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.countdownDiv = document.createElement('div');
     oPopupObject.countdownDiv.classList.add('countdown');
-    oPopupObject.countdownDiv.style.width = 0;
     oPopupObject.view.appendChild(oPopupObject.countdownDiv);
 
     return oPopupObject;
