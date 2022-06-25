@@ -17,8 +17,6 @@ let nPasswordPopupCloseTimeoutId = -1;
 let nPasswordPopupCloseCountdownIntervalId = -1;
 let nPasswordPopupCloseCountdown = 0;
 
-const sDefaultPassword = 'password';
-
 const validateContent = function (sContent) {
     let sValidatedContent = '';
     if (sContent.length < MAX_CONTENT_LENGTH) {
@@ -30,7 +28,6 @@ const validateContent = function (sContent) {
 const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) {
     let sContent = '';
     let sPlaintextFileContent = '';
-    let sPasswordOrDefault = sPassword ? sPassword : sDefaultPassword;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     if (sFilename.endsWith(`.${FILE_EXTENSION_ENCRYPTED}`)) {
         const sEncryptedFileContent = await readFile(`${sKeeperDirectoryOrDefault}/${sFilename}`, 'utf-8');
@@ -40,7 +37,7 @@ const readFileContent = async function (sFilename, sPassword, sKeeperDirectory) 
         try {
             const { data: sDecrypted } = await oOpenPgp.decrypt({
                 message: oEncryptedMessage,
-                passwords: sPasswordOrDefault
+                passwords: sPassword
             });
             sPlaintextFileContent = sDecrypted;
         } catch (error) {
