@@ -1,3 +1,27 @@
+body {
+    background-color: rgb(0, 180, 250);
+    color: rgb(248, 248, 248);
+    font-family: monospace;
+}
+
+ul {
+    list-style: upper-alpha;
+}
+
+button {
+    background-color: rgb(0, 180, 250);
+    color: rgb(248, 248, 248);
+    font-family: monospace;
+    border: 3px solid rgb(248, 248, 248);
+    border-radius: 8px;
+    margin: 0.1em 0.2em 0.1em 0.2em;
+}
+
+input {
+    border: 3px solid rgb(248, 248, 248);
+    font-family: monospace;
+}
+
 h1#title {
     display: none;
 }
@@ -12,8 +36,8 @@ h1#title {
 
 .popup.show {
     display: block;
-    border: 1px solid black;
-    background-color: white;
+    border: 3px dotted rgb(248, 248, 248);
+    background-color: rgb(0, 180, 250);
     padding: 16px;
     position: absolute;
     top: calc(50% - 240px);
@@ -24,4 +48,5 @@ h1#title {
 
 .popup>.countdown {
     height: 60px;
+    background-color: rgb(248, 248, 248);
 }
