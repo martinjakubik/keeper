@@ -59,7 +59,6 @@ const startPasswordPopupCountdown = function () {
     nPasswordPopupCloseCountdownIntervalId = setInterval(handlePasswordPopupCountdownInterval, 1000);
     const sShape = getShape(PASSWORD_POPUP_TIMEOUT_SECONDS, PASSWORD_POPUP_TIMEOUT_SECONDS);
     oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
-    oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(175, 175, 175)';
 };
 
 const usePasswordPopupToReadFile = async function () {
@@ -121,13 +120,6 @@ const addInput = function (sLabel, oParent) {
     return oInput;
 };
 
-const addPasswordInput = function (sLabel, oParent) {
-    const oInput = addInput(sLabel, oParent);
-    oInput.type = 'password';
-
-    return oInput;
-};
-
 const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     const oPopup = document.createElement('div');
     if (!oParent) {
@@ -139,6 +131,9 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
         }
     };
     oPopup.classList.add('popup');
+
+    const oContentParagraph = document.createElement('p');
+    oPopup.appendChild(oContentParagraph);
 
     const oConfirmButton = addButton('Ok', oPopup);
     if (!fnConfirmAction) {
@@ -152,11 +147,32 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     }
     oCancelButton.onclick = fnCancelAction;
 
+    const fnAddInput =  function (sLabel) {
+        const oLabel = document.createElement('p');
+        oLabel.innerText = sLabel;
+        oPopup.insertBefore(oLabel, oContentParagraph);
+        const oInput = document.createElement('input');
+        oInput.type = 'password';
+        oPopup.insertBefore(oInput, oContentParagraph);
+
+        return oInput;
+    };
+
+    const fnAddButton = function (sLabel) {
+        const oButton = document.createElement('button');
+        oButton.innerText = sLabel;
+        oPopup.insertBefore(oButton, oContentParagraph);
+        return oButton;
+    };
+
     oParent.appendChild(oPopup);
     return {
         view: oPopup,
+        contentParagraph: oContentParagraph,
         confirmButton: oConfirmButton,
-        cancelButton: oCancelButton
+        cancelButton: oCancelButton,
+        addInput: fnAddInput,
+        addButton: fnAddButton
     };
 };
 
@@ -238,8 +254,8 @@ const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
 const addPasswordPopup = function (oParent) {
     const oPopupObject = addPopupObject(oParent);
 
-    oPopupObject.passwordInput = addPasswordInput('password', oPopupObject.view);
-    const oShowContentButton = addButton('show', oPopupObject.view);
+    oPopupObject.passwordInput = oPopupObject.addInput('password');
+    const oShowContentButton = oPopupObject.addButton('show');
     oShowContentButton.onclick = usePasswordPopupToReadFile;
     oPopupObject.passwordInput.onkeyup = oEvent => {
         if (oEvent.key === 'Enter') {
@@ -249,9 +265,6 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonPressed;
     oPopupObject.cancelButton.onclick = handlePasswordPopupCancelButtonPressed;
-
-    oPopupObject.contentParagraph = document.createElement('p');
-    oPopupObject.view.appendChild(oPopupObject.contentParagraph);
 
     oPopupObject.countdownDiv = document.createElement('div');
     oPopupObject.countdownDiv.classList.add('countdown');
