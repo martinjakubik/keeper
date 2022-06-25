@@ -44,6 +44,7 @@ h1#title {
     left: calc(50% - 280px / 2);
     height: 240px;
     width: 280px;
+    overflow-y: scroll;
 }
 
 .popup>.countdown {
