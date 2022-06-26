@@ -177,9 +177,7 @@ const addAddEntryPopup = function (oParent) {
     const oPopupObject = addPopupObject(oParent);
 
     oAddEntryPopupObject.entryNameInput = addInput('entry', oPopupObject.view);
-
     oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopupObject.view);
-
     oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopupObject.view);
 
     return oPopupObject;
