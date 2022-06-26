@@ -10,6 +10,7 @@ const MAX_CONTENT_LENGTH = 1024;
 const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 
 let oFileSystem;
+let oFileFilterInput;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
@@ -268,13 +269,18 @@ const addPasswordPopup = function (oParent) {
     return oPopupObject;
 };
 
-const handleKeeperDirectoryChange = function () {
+const handleKeeperListChange = function () {
+    const sFilter = oFileFilterInput.value;
     const sKeeperDirectory = oKeeperDirectoryInput.value;
-    renderFileList(sKeeperDirectory);
+    renderFileList(sKeeperDirectory, sFilter);
+};
+
+const handleFileFilterInputChange = function () {
+    handleKeeperListChange();
 };
 
 const handleKeeperDirectoryInputChange = function () {
-    handleKeeperDirectoryChange();
+    handleKeeperListChange();
 };
 
 const handleChooseKeeperDirectoryButtonTapped = async function () {
@@ -288,7 +294,7 @@ ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
     } else {
         oKeeperDirectoryInput.value = '';
     }
-    handleKeeperDirectoryChange();
+    handleKeeperListChange();
 });
 
 const clearList = function (sSelector) {
@@ -300,12 +306,29 @@ const clearList = function (sSelector) {
     }
 };
 
-const renderFileList = function (sKeeperDirectory) {
+const isMatchForFilter = function (s, sFilter) {
+    let bIsMatchForFilter = true;
+    if (sFilter) {
+        if (s.indexOf(sFilter) >= 0) {
+            bIsMatchForFilter = true;
+        } else {
+            bIsMatchForFilter = false;
+        }
+    }
+    return bIsMatchForFilter;
+};
+
+const renderFileList = function (sKeeperDirectory, sFilter) {
+    if (!sKeeperDirectory || sKeeperDirectory.length < 1) {
+        return;
+    }
     try {
         clearList('fileList');
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
-                addListItem('fileList', sFilename);
+                if (isMatchForFilter(sFilename, sFilter)) {
+                    addListItem('fileList', sFilename);
+                }
             }
         });
     } catch (oError) {
@@ -316,6 +339,8 @@ const renderFileList = function (sKeeperDirectory) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
+    oFileFilterInput = addInput('fileFilter');
+    oFileFilterInput.onchange = handleFileFilterInputChange;
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
