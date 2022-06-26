@@ -76,6 +76,16 @@ const handleFilePressed = function (oEvent) {
     showPasswordPopup(sFilename, nPageVerticalOffset);
 };
 
+const addList = function (sId, oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+    const oList = document.createElement('ul');
+    oList.id = sId;
+    oParent.appendChild(oList);
+    return oList;
+};
+
 const addListItem = (sSelector, sFilename) => {
     const oElement = document.getElementById(sSelector);
     if (oElement) {
@@ -341,6 +351,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     oFileFilterInput = addInput('fileFilter');
     oFileFilterInput.oninput = handleFileFilterInputChange;
+    addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
