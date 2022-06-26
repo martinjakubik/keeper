@@ -340,7 +340,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     oFileFilterInput = addInput('fileFilter');
-    oFileFilterInput.onchange = handleFileFilterInputChange;
+    oFileFilterInput.oninput = handleFileFilterInputChange;
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
