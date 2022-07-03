@@ -1,6 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
+const { ok } = require('assert');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
@@ -360,6 +361,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('keeperDirectory');
+    oKeeperDirectoryInput.value = sKeeperDirectoryOrDefault;
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
     const oChooseKeeperDirectoryButton = addButton('Select...');
     oChooseKeeperDirectoryButton.onclick = handleChooseKeeperDirectoryButtonTapped;
