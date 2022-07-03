@@ -355,7 +355,7 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInput = addInput('search');
+    oFileFilterInput = addInput();
     oFileFilterInput.oninput = handleFileFilterInputChange;
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
