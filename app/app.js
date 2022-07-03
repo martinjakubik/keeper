@@ -8,6 +8,7 @@ const STYLE_EXPAND_PARAGRAPH = 'expand';
 const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
 const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
+const MAX_FILE_FILTER_STRING_LENGTH = 30;
 
 let oFileSystem;
 let oFileFilterInput;
@@ -285,8 +286,22 @@ const addPasswordPopup = function (oParent) {
     return oPopupObject;
 };
 
+const sanitizeFileFIlterInput = function (sInput) {
+    let sSanitizedInput = '';
+    const sTruncatedInput = sInput.substring(0, MAX_FILE_FILTER_STRING_LENGTH - 1);
+    const sLegalCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const nTruncatedLength = sTruncatedInput.length;
+    for (let i = 0; i < nTruncatedLength; i++) {
+        const c = sTruncatedInput.charAt(i);
+        if (sLegalCharacters.indexOf(c) >= 0) {
+            sSanitizedInput = sSanitizedInput + c;
+        }
+    }
+    return sSanitizedInput;
+};
+
 const handleKeeperListChange = function () {
-    const sFilter = oFileFilterInput.value;
+    const sFilter = sanitizeFileFIlterInput(oFileFilterInput.value);
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     renderFileList(sKeeperDirectory, sFilter);
 };
