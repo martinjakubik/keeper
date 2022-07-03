@@ -286,7 +286,7 @@ const addPasswordPopup = function (oParent) {
     return oPopupObject;
 };
 
-const sanitizeFileFIlterInput = function (sInput) {
+const sanitizeFileFilterInput = function (sInput) {
     let sSanitizedInput = '';
     const sTruncatedInput = sInput.substring(0, MAX_FILE_FILTER_STRING_LENGTH - 1);
     const sLegalCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -301,7 +301,7 @@ const sanitizeFileFIlterInput = function (sInput) {
 };
 
 const handleKeeperListChange = function () {
-    const sFilter = sanitizeFileFIlterInput(oFileFilterInput.value);
+    const sFilter = sanitizeFileFilterInput(oFileFilterInput.value);
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     renderFileList(sKeeperDirectory, sFilter);
 };
