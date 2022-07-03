@@ -355,11 +355,11 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInput = addInput('fileFilter');
+    oFileFilterInput = addInput('search');
     oFileFilterInput.oninput = handleFileFilterInputChange;
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
-    oKeeperDirectoryInput = addInput('keeperDirectory');
+    oKeeperDirectoryInput = addInput('choose directory');
     oKeeperDirectoryInput.value = sKeeperDirectoryOrDefault;
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
     const oChooseKeeperDirectoryButton = addButton('Select...');
