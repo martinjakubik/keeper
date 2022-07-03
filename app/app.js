@@ -232,14 +232,14 @@ const getShape = function (nTicks, nTotalTicks) {
     return 'polygon(' + sShapePoints + ')';
 };
 
-const updatePasswordPopupCountdownInterval = function () {
+const updatePasswordPopupCountdown = function () {
     const sShape = getShape((PASSWORD_POPUP_TIMEOUT_SECONDS - nPasswordPopupCloseCountdown), PASSWORD_POPUP_TIMEOUT_SECONDS);
     oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
 };
 
 const handlePasswordPopupCountdownInterval = function () {
     nPasswordPopupCloseCountdown--;
-    updatePasswordPopupCountdownInterval();
+    updatePasswordPopupCountdown();
 };
 
 const handlePasswordPopupTimeoutExpired = function () {
@@ -259,7 +259,7 @@ const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
         oPasswordPopupObject.view.style.top = nPageVerticalOffset;
         oPasswordPopupObject.view.classList.add('show');
         oPasswordPopupObject.filename = sFilename;
-        updatePasswordPopupCountdownInterval();
+        updatePasswordPopupCountdown();
     }
 };
 
