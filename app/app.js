@@ -1,7 +1,6 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { ok } = require('assert');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
