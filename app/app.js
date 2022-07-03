@@ -200,6 +200,7 @@ const closePasswordPopup = function () {
     if (oPasswordPopupObject.view.classList.contains('show')) {
         oPasswordPopupObject.view.classList.remove('show');
     }
+    nPasswordPopupCloseCountdown = 0;
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
     oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(255, 255, 255)';
@@ -231,10 +232,14 @@ const getShape = function (nTicks, nTotalTicks) {
     return 'polygon(' + sShapePoints + ')';
 };
 
-const handlePasswordPopupCountdownInterval = function () {
-    nPasswordPopupCloseCountdown--;
+const updatePasswordPopupCountdownInterval = function () {
     const sShape = getShape((PASSWORD_POPUP_TIMEOUT_SECONDS - nPasswordPopupCloseCountdown), PASSWORD_POPUP_TIMEOUT_SECONDS);
     oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
+};
+
+const handlePasswordPopupCountdownInterval = function () {
+    nPasswordPopupCloseCountdown--;
+    updatePasswordPopupCountdownInterval();
 };
 
 const handlePasswordPopupTimeoutExpired = function () {
@@ -254,6 +259,7 @@ const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
         oPasswordPopupObject.view.style.top = nPageVerticalOffset;
         oPasswordPopupObject.view.classList.add('show');
         oPasswordPopupObject.filename = sFilename;
+        updatePasswordPopupCountdownInterval();
     }
 };
 
