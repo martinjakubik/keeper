@@ -25,9 +25,21 @@ button {
     margin: 0.1em 0.2em 0.1em 0.2em;
 }
 
+button:focus-visible {
+    outline-width: 4px;
+    outline-color: rgb(0, 180, 250);
+    outline-style: auto;
+}
+
 input {
     border: 3px solid rgb(248, 248, 248);
     font-family: monospace;
+}
+
+input:focus-visible {
+    outline-width: 4px;
+    outline-color: rgb(0, 180, 250);
+    outline-style: auto;
 }
 
 h1#title {
