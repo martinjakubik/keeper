@@ -27,21 +27,27 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.93229456"
-     inkscape:cx="303.01582"
-     inkscape:cy="318.56884"
+     inkscape:cx="244.02159"
+     inkscape:cy="325.00458"
      inkscape:window-width="1440"
      inkscape:window-height="847"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      inkscape:snap-intersection-paths="false"
      inkscape:object-nodes="false"
      inkscape:object-paths="true"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     inkscape:snap-global="false"
+     inkscape:snap-bbox="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-nodes="false"
+     inkscape:snap-others="false"
+     inkscape:snap-bbox-edge-midpoints="true" />
   <defs
      id="defs2" />
   <g
@@ -106,7 +112,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Layer 2"
-     style="display:inline"
+     style="display:none"
      transform="translate(-27.230208,-66.039798)">
     <path
        style="fill:#1affff;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
@@ -140,5 +146,33 @@
        style="fill:#e6faff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
        d="m 27.32047,83.283379 27.32048,27.320481 2.20326,17.62611 6.609791,-4.40653 27.320478,28.20178 -2.64392,19.82938 7.4911,8.3724 v 9.69437 l 17.185461,-7.93175 18.50742,21.15133 v 30.92926 L 27.285899,120.64647 Z"
        id="path8305" />
+    <path
+       style="fill:#e6faff;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
+       d="m 27.32047,83.283379 27.32048,27.320481 2.20326,17.62611 6.609791,-4.40653 27.320478,28.20178 -2.64392,19.82938 7.4911,8.3724 v 9.69437 l 17.185461,-7.93175 18.50742,21.15133 v 30.92926 L 27.285899,120.64647 Z"
+       id="path948" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3">
+    <circle
+       style="fill:#24bce2;fill-opacity:1;stroke:#000000;stroke-width:3.68601;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2021"
+       cx="71.517097"
+       cy="87.693581"
+       r="61.457359" />
+    <circle
+       style="display:inline;fill:#24bce2;fill-opacity:1;stroke:#ffffff;stroke-width:4;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path1425"
+       cx="71.517097"
+       cy="87.693581"
+       r="57.469093"
+       inkscape:export-filename="/Users/martin/code/gitwork/keeper/app/icon/path1425.png"
+       inkscape:export-xdpi="148.64999"
+       inkscape:export-ydpi="148.64999" />
+    <path
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:4;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 20.387498,75.197556 h 24.97423 l 3.97317,10.50052 5.10836,-7.94634 h 26.67701 l 1.98659,11.63572 h 6.243563 l 1.98658,6.24356 6.811146,-11.63572 h 14.189923 l 8.51393,17.311674"
+       id="path1139" />
   </g>
 </svg>
