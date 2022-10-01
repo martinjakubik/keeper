@@ -268,15 +268,13 @@ const addPasswordPopup = function (oParent) {
     const oPopupObject = addPopupObject(oParent);
 
     oPopupObject.passwordInput = oPopupObject.addInput('password');
-    const oShowContentButton = oPopupObject.addButton('show');
-    oShowContentButton.onclick = usePasswordPopupToReadFile;
     oPopupObject.passwordInput.onkeyup = oEvent => {
         if (oEvent.key === 'Enter') {
-            oShowContentButton.click();
+            oPopupObject.confirmButton.click();
         }
     };
 
-    oPopupObject.confirmButton.onclick = handlePasswordPopupConfirmButtonPressed;
+    oPopupObject.confirmButton.onclick = usePasswordPopupToReadFile;
     oPopupObject.cancelButton.onclick = handlePasswordPopupCancelButtonPressed;
 
     oPopupObject.countdownDiv = document.createElement('div');
