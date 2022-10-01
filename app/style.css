@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(0, 180, 250);
+    background-color: var(--main-bg-color);
     color: rgb(248, 248, 248);
     font-family: monospace;
 }
@@ -17,7 +17,7 @@ li:hover {
 }
 
 button {
-    background-color: rgb(0, 180, 250);
+    background-color: var(--main-bg-color);
     color: rgb(248, 248, 248);
     font-family: monospace;
     border: 3px solid rgb(248, 248, 248);
@@ -27,7 +27,7 @@ button {
 
 button:focus-visible {
     outline-width: 4px;
-    outline-color: rgb(0, 180, 250);
+    outline-color: var(--main-bg-color);
     outline-style: auto;
 }
 
@@ -38,7 +38,7 @@ input {
 
 input:focus-visible {
     outline-width: 4px;
-    outline-color: rgb(0, 180, 250);
+    outline-color: var(--main-bg-color);
     outline-style: auto;
 }
 
@@ -57,7 +57,7 @@ h1#title {
 .popup.show {
     display: block;
     border: 3px dotted rgb(248, 248, 248);
-    background-color: rgb(0, 180, 250);
+    background-color: var(--main-bg-color);
     padding: 16px;
     position: absolute;
     top: calc(50% - 240px);
@@ -70,4 +70,8 @@ h1#title {
 .popup>.countdown {
     height: 60px;
     background-color: rgb(248, 248, 248);
+}
+
+:root {
+    --main-bg-color: rgb(36, 188, 226);
 }
