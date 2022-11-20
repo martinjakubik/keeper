@@ -205,6 +205,7 @@ const closePasswordPopup = function () {
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
     oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(255, 255, 255)';
+    oFileFilterInput.focus();
 };
 
 const getFormattedPoint = function (aPoint, index, nNumberOfPoints) {
@@ -256,6 +257,7 @@ const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
         oPasswordPopupObject.view.style.top = nPageVerticalOffset;
         oPasswordPopupObject.view.classList.add('show');
         oPasswordPopupObject.filename = sFilename;
+        oPasswordPopupObject.passwordInput.focus();
         updatePasswordPopupCountdown();
     }
 };
