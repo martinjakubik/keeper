@@ -247,10 +247,6 @@ const handlePasswordPopupTimeoutExpired = function () {
     closePasswordPopup();
 };
 
-const handlePasswordPopupConfirmButtonPressed = function () {
-    closePasswordPopup();
-};
-
 const handlePasswordPopupCancelButtonPressed = function () {
     closePasswordPopup();
 };
