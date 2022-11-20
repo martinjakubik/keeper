@@ -12,6 +12,7 @@ const MAX_FILE_FILTER_STRING_LENGTH = 30;
 
 let oFileSystem;
 let oFileFilterInput;
+let oClearFileFilterButton;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
@@ -328,6 +329,11 @@ ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
     handleKeeperListChange();
 });
 
+const handleClearFileFilterButtonTapped = function () {
+    oKeeperDirectoryInput.value = '';
+    handleKeeperListChange();
+};
+
 const clearList = function (sSelector) {
     const oListElement = document.getElementById(sSelector);
     if (oListElement) {
@@ -372,6 +378,9 @@ const renderApp = function (oFS, sKeeperDirectory) {
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
     oFileFilterInput = addInput();
     oFileFilterInput.oninput = handleFileFilterInputChange;
+    oClearFileFilterButton = addButton('x', oFileFilterInput);
+    oClearFileFilterButton.onclick = handleClearFileFilterButtonTapped;
+    oFileFilterInput.focus();
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('choose directory');
