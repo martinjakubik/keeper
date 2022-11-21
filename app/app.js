@@ -134,16 +134,10 @@ const addSearchInput = function (sLabel, oParent) {
         oParent = document.body;
     }
 
-    if(sLabel) {
-        const oLabel = document.createElement('p');
-        oLabel.innerText = sLabel;
-        oParent.appendChild(oLabel);
-    }
-
     const oSearchInputContainer = document.createElement('div');
     oSearchInputContainer.classList.add('searchInput');
     const oInput = addInput(null, oSearchInputContainer);
-    const oButton = addButton(null, oSearchInputContainer);
+    const oButton = addButton(sLabel, oSearchInputContainer);
 
     oParent.appendChild(oSearchInputContainer);
 
@@ -400,7 +394,7 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInput = addSearchInput();
+    oFileFilterInput = addSearchInput('x');
     oFileFilterInput.input.oninput = handleFileFilterInputChange;
     oFileFilterInput.button.onclick = handleClearFileFilterButtonTapped;
     oFileFilterInput.input.focus();
