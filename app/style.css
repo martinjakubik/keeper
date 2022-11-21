@@ -50,6 +50,23 @@ h1#title {
     display: block;
 }
 
+div.searchInput {
+    display: flex;
+    flex-direction: row;
+    border: 3px solid rgb(248, 248, 248);
+}
+
+div.searchInput>input {
+    flex-grow: 2;
+    border: none;
+}
+
+div.searchInput>input:focus {
+    outline: none;
+}
+
+div.searchInput>button {}
+
 .popup:not(.show) {
     display: none;
 }

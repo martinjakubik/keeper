@@ -12,7 +12,6 @@ const MAX_FILE_FILTER_STRING_LENGTH = 30;
 
 let oFileSystem;
 let oFileFilterInput;
-let oClearFileFilterButton;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
@@ -128,6 +127,31 @@ const addInput = function (sLabel, oParent) {
     oParent.appendChild(oInput);
 
     return oInput;
+};
+
+const addSearchInput = function (sLabel, oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+
+    if(sLabel) {
+        const oLabel = document.createElement('p');
+        oLabel.innerText = sLabel;
+        oParent.appendChild(oLabel);
+    }
+
+    const oSearchInputContainer = document.createElement('div');
+    oSearchInputContainer.classList.add('searchInput');
+    const oInput = addInput(null, oSearchInputContainer);
+    const oButton = addButton(null, oSearchInputContainer);
+
+    oParent.appendChild(oSearchInputContainer);
+
+    return {
+        view: oSearchInputContainer,
+        input: oInput,
+        button: oButton
+    };
 };
 
 const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
@@ -376,11 +400,10 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInput = addInput();
-    oFileFilterInput.oninput = handleFileFilterInputChange;
-    oClearFileFilterButton = addButton('x', oFileFilterInput);
-    oClearFileFilterButton.onclick = handleClearFileFilterButtonTapped;
-    oFileFilterInput.focus();
+    oFileFilterInput = addSearchInput();
+    oFileFilterInput.input.oninput = handleFileFilterInputChange;
+    oFileFilterInput.button.onclick = handleClearFileFilterButtonTapped;
+    oFileFilterInput.input.focus();
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('choose directory');
