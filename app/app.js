@@ -11,7 +11,7 @@ const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 const MAX_FILE_FILTER_STRING_LENGTH = 30;
 
 let oFileSystem;
-let oFileFilterInput;
+let oFileFilterInputObject;
 let oKeeperDirectoryInput;
 let oAddEntryPopupObject = {};
 let oPasswordPopupObject = {};
@@ -224,7 +224,7 @@ const closePasswordPopup = function () {
     oPasswordPopupObject.passwordInput.value = '';
     oPasswordPopupObject.contentParagraph.innerText = '';
     oPasswordPopupObject.countdownDiv.style.backgroundColor = 'rgb(255, 255, 255)';
-    oFileFilterInput.focus();
+    oFileFilterInputObject.input.focus();
 };
 
 const getFormattedPoint = function (aPoint, index, nNumberOfPoints) {
@@ -320,7 +320,7 @@ const sanitizeFileFilterInput = function (sInput) {
 };
 
 const handleKeeperListChange = function () {
-    const sFilter = sanitizeFileFilterInput(oFileFilterInput.value);
+    const sFilter = sanitizeFileFilterInput(oFileFilterInputObject.input.value);
     const sKeeperDirectory = oKeeperDirectoryInput.value;
     renderFileList(sKeeperDirectory, sFilter);
 };
@@ -394,10 +394,10 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInput = addSearchInput('x');
-    oFileFilterInput.input.oninput = handleFileFilterInputChange;
-    oFileFilterInput.button.onclick = handleClearFileFilterButtonTapped;
-    oFileFilterInput.input.focus();
+    oFileFilterInputObject = addSearchInput('x');
+    oFileFilterInputObject.input.oninput = handleFileFilterInputChange;
+    oFileFilterInputObject.button.onclick = handleClearFileFilterButtonTapped;
+    oFileFilterInputObject.input.focus();
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = addInput('choose directory');
