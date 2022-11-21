@@ -348,7 +348,7 @@ ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
 });
 
 const handleClearFileFilterButtonTapped = function () {
-    oKeeperDirectoryInput.value = '';
+    oFileFilterInputObject.input.value = '';
     handleKeeperListChange();
 };
 
