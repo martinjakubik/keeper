@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "learnhypertext": "^1.4.0",
     "openpgp": "^5.2.1"
   },
   "config": {
