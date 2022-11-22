@@ -103,16 +103,6 @@ const addListItem = (sSelector, sFilename) => {
     }
 };
 
-const addButton = function (sLabel, oParent) {
-    if (!oParent) {
-        oParent = document.body;
-    }
-    const oButton = document.createElement('button');
-    oButton.innerText = sLabel;
-    oParent.appendChild(oButton);
-    return oButton;
-};
-
 const addInput = function (sLabel, oParent) {
     if (!oParent) {
         oParent = document.body;
@@ -138,7 +128,7 @@ const addSearchInput = function (sLabel, oParent) {
     const oSearchInputContainer = document.createElement('div');
     oSearchInputContainer.classList.add('searchInput');
     const oInput = addInput(null, oSearchInputContainer);
-    const oButton = addButton(sLabel, oSearchInputContainer);
+    const oButton = createButton('btnClearSearch', sLabel, oSearchInputContainer);
 
     oParent.appendChild(oSearchInputContainer);
 
@@ -164,13 +154,13 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     const oContentParagraph = document.createElement('p');
     oPopup.appendChild(oContentParagraph);
 
-    const oConfirmButton = addButton('Ok', oPopup);
+    const oConfirmButton = createButton('btnOk', 'Ok', oPopup);
     if (!fnConfirmAction) {
         fnConfirmAction = fnHandleCloseActionDefault;
     }
     oConfirmButton.onclick = fnConfirmAction;
 
-    const oCancelButton = addButton('Cancel', oPopup);
+    const oCancelButton = createButton('btnCancel', 'Cancel', oPopup);
     if (!fnCancelAction) {
         fnCancelAction = fnHandleCloseActionDefault;
     }
@@ -404,7 +394,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     oKeeperDirectoryInput = addInput('choose directory');
     oKeeperDirectoryInput.value = sKeeperDirectoryOrDefault;
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
-    const oChooseKeeperDirectoryButton = addButton('Select...');
+    const oChooseKeeperDirectoryButton = createButton('btnSelect', 'Select...');
     oChooseKeeperDirectoryButton.onclick = handleChooseKeeperDirectoryButtonTapped;
     oAddEntryPopupObject = addAddEntryPopup();
     oPasswordPopupObject = addPasswordPopup();
