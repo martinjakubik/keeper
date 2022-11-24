@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createButton } = require('../lib/js/learnhypertext.js');
+const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
@@ -103,23 +103,6 @@ const addListItem = (sSelector, sFilename) => {
     }
 };
 
-const addInput = function (sLabel, oParent) {
-    if (!oParent) {
-        oParent = document.body;
-    }
-
-    if(sLabel) {
-        const oLabel = document.createElement('p');
-        oLabel.innerText = sLabel;
-        oParent.appendChild(oLabel);
-    }
-
-    const oInput = document.createElement('input');
-    oParent.appendChild(oInput);
-
-    return oInput;
-};
-
 const addSearchInput = function (sLabel, oParent) {
     if (!oParent) {
         oParent = document.body;
@@ -127,7 +110,7 @@ const addSearchInput = function (sLabel, oParent) {
 
     const oSearchInputContainer = document.createElement('div');
     oSearchInputContainer.classList.add('searchInput');
-    const oInput = addInput(null, oSearchInputContainer);
+    const oInput = createTextInput('searchInput', '', null, oSearchInputContainer);
     const oButton = createButton('btnClearSearch', sLabel, oSearchInputContainer);
 
     oParent.appendChild(oSearchInputContainer);
@@ -198,9 +181,9 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
 const addAddEntryPopup = function (oParent) {
     const oPopupObject = addPopupObject(oParent);
 
-    oAddEntryPopupObject.entryNameInput = addInput('entry', oPopupObject.view);
-    oAddEntryPopupObject.entryPasswordInput = addInput('password', oPopupObject.view);
-    oAddEntryPopupObject.entryRepeatPasswordInput = addInput('repeatPassword', oPopupObject.view);
+    oAddEntryPopupObject.entryNameInput = createTextInput('entry', '', null, oPopupObject.view);
+    oAddEntryPopupObject.entryPasswordInput = createTextInput('password', '', null,  oPopupObject.view);
+    oAddEntryPopupObject.entryRepeatPasswordInput = createTextInput('repeatPassword', '', null, oPopupObject.view);
 
     return oPopupObject;
 };
@@ -391,7 +374,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     oFileFilterInputObject.input.focus();
     addList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
-    oKeeperDirectoryInput = addInput('choose directory');
+    oKeeperDirectoryInput = createTextInput('chooseDirectoryInput', 'choose directory');
     oKeeperDirectoryInput.value = sKeeperDirectoryOrDefault;
     oKeeperDirectoryInput.onchange = handleKeeperDirectoryInputChange;
     const oChooseKeeperDirectoryButton = createButton('btnSelect', 'Select...');
