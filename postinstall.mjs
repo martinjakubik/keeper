@@ -10,7 +10,7 @@ oFs.mkdir(sLibPath, oMkDirOptions).then((oResult) => {
     console.log(oResult);
 
     oFs.copyFile(
-        './node_modules/learnhypertext/js/index.mjs', `${sLibPath}/learnhypertext.js`
+        './node_modules/learnhypertext/dist/index.js', `${sLibPath}/learnhypertext.js`
     ).then((oResult) => {
         console.log(oResult);
     }).catch((oError) => {
