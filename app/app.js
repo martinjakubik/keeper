@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createList, createListItem } = require('./hypertext.js');
+const { createList, createListItem, createSearchInput } = require('./hypertext.js');
 const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -84,25 +84,6 @@ const addListItem = (sParentList, sFilename) => {
     if (oListElementObject.anchor) {
         oListElementObject.anchor.onclick = handleFilePressed;
     }
-};
-
-const addSearchInput = function (sLabel, oParent) {
-    if (!oParent) {
-        oParent = document.body;
-    }
-
-    const oSearchInputContainer = document.createElement('div');
-    oSearchInputContainer.classList.add('searchInput');
-    const oInput = createTextInput('searchInput', '', null, oSearchInputContainer);
-    const oButton = createButton('btnClearSearch', sLabel, oSearchInputContainer);
-
-    oParent.appendChild(oSearchInputContainer);
-
-    return {
-        view: oSearchInputContainer,
-        input: oInput,
-        button: oButton
-    };
 };
 
 const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
@@ -351,7 +332,7 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
 const renderApp = function (oFS, sKeeperDirectory) {
     oFileSystem = oFS;
     let sKeeperDirectoryOrDefault = sKeeperDirectory ? sKeeperDirectory : sDefaultKeeperDirectory;
-    oFileFilterInputObject = addSearchInput('x');
+    oFileFilterInputObject = createSearchInput('x');
     oFileFilterInputObject.input.oninput = handleFileFilterInputChange;
     oFileFilterInputObject.button.onclick = handleClearFileFilterButtonTapped;
     oFileFilterInputObject.input.focus();

@@ -1,3 +1,5 @@
+const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
+
 const createList = function (sId, oParent) {
     if (!oParent) {
         oParent = document.body;
@@ -26,5 +28,26 @@ const createListItem = (sParentList, sFilename) => {
     return oListElementObject;
 };
 
+const createSearchInput = function (sLabel, oParent) {
+    if (!oParent) {
+        oParent = document.body;
+    }
+
+    const oSearchInputContainer = document.createElement('div');
+    oSearchInputContainer.classList.add('searchInput');
+    const oInput = createTextInput('searchInput', '', null, oSearchInputContainer);
+    const oButton = createButton('btnClearSearch', sLabel, oSearchInputContainer);
+
+    oParent.appendChild(oSearchInputContainer);
+
+    return {
+        view: oSearchInputContainer,
+        input: oInput,
+        button: oButton
+    };
+};
+
+
 exports.createList = createList;
 exports.createListItem = createListItem;
+exports.createSearchInput = createSearchInput;
