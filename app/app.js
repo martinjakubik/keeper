@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createList } = require('./hypertext.js');
+const { createList, createListItem } = require('./hypertext.js');
 const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -79,18 +79,10 @@ const handleFilePressed = function (oEvent) {
     showPasswordPopup(sFilename, nPageVerticalOffset);
 };
 
-const addListItem = (sSelector, sFilename) => {
-    const oElement = document.getElementById(sSelector);
-    if (oElement) {
-        const oListElement = document.createElement('li');
-        const oFilenameParagraph = document.createElement('p');
-        oFilenameParagraph.id = `filename-${sFilename}`;
-        const oAnchor = document.createElement('a');
-        oListElement.appendChild(oFilenameParagraph);
-        oFilenameParagraph.appendChild(oAnchor);
-        oAnchor.innerText = sFilename;
-        oAnchor.onclick = handleFilePressed;
-        oElement.appendChild(oListElement);
+const addListItem = (sParentList, sFilename) => {
+    const oListElementObject = createListItem(sParentList, sFilename);
+    if (oListElementObject.anchor) {
+        oListElementObject.anchor.onclick = handleFilePressed;
     }
 };
 
