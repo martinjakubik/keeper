@@ -1,6 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
+const { createList } = require('./hypertext.js');
 const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -76,16 +77,6 @@ const handleFilePressed = function (oEvent) {
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
     showPasswordPopup(sFilename, nPageVerticalOffset);
-};
-
-const addList = function (sId, oParent) {
-    if (!oParent) {
-        oParent = document.body;
-    }
-    const oList = document.createElement('ul');
-    oList.id = sId;
-    oParent.appendChild(oList);
-    return oList;
 };
 
 const addListItem = (sSelector, sFilename) => {
@@ -372,7 +363,7 @@ const renderApp = function (oFS, sKeeperDirectory) {
     oFileFilterInputObject.input.oninput = handleFileFilterInputChange;
     oFileFilterInputObject.button.onclick = handleClearFileFilterButtonTapped;
     oFileFilterInputObject.input.focus();
-    addList('fileList');
+    createList('fileList');
     renderFileList(sKeeperDirectoryOrDefault);
     oKeeperDirectoryInput = createTextInput('chooseDirectoryInput', 'choose directory');
     oKeeperDirectoryInput.value = sKeeperDirectoryOrDefault;
