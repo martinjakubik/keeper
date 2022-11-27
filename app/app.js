@@ -98,7 +98,7 @@ const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     }
     oCancelButton.onclick = fnCancelAction;
 
-    const fnAddInput =  function (sLabel) {
+    const fnAddInput = function (sLabel) {
         const oLabel = document.createElement('p');
         oLabel.innerText = sLabel;
         oPopup.insertBefore(oLabel, oContentParagraph);
