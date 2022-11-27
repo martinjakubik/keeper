@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createList, createListItem, createSearchInput } = require('./hypertext.js');
+const { createList, createListItem, createSearchInput, createPopupObject } = require('./hypertext.js');
 const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -71,64 +71,8 @@ const usePasswordPopupToReadFile = async function () {
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
 
-const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
-    const oPopup = document.createElement('div');
-    if (!oParent) {
-        oParent = document.body;
-    }
-    const fnHandleCloseActionDefault = function () {
-        if (oPopup.classList.contains('show')) {
-            oPopup.classList.remove('show');
-        }
-    };
-    oPopup.classList.add('popup');
-
-    const oContentParagraph = document.createElement('p');
-    oPopup.appendChild(oContentParagraph);
-
-    const oConfirmButton = createButton('btnOk', 'Ok', oPopup);
-    if (!fnConfirmAction) {
-        fnConfirmAction = fnHandleCloseActionDefault;
-    }
-    oConfirmButton.onclick = fnConfirmAction;
-
-    const oCancelButton = createButton('btnCancel', 'Cancel', oPopup);
-    if (!fnCancelAction) {
-        fnCancelAction = fnHandleCloseActionDefault;
-    }
-    oCancelButton.onclick = fnCancelAction;
-
-    const fnAddInput = function (sLabel) {
-        const oLabel = document.createElement('p');
-        oLabel.innerText = sLabel;
-        oPopup.insertBefore(oLabel, oContentParagraph);
-        const oInput = document.createElement('input');
-        oInput.type = 'password';
-        oPopup.insertBefore(oInput, oContentParagraph);
-
-        return oInput;
-    };
-
-    const fnAddButton = function (sLabel) {
-        const oButton = document.createElement('button');
-        oButton.innerText = sLabel;
-        oPopup.insertBefore(oButton, oContentParagraph);
-        return oButton;
-    };
-
-    oParent.appendChild(oPopup);
-    return {
-        view: oPopup,
-        contentParagraph: oContentParagraph,
-        confirmButton: oConfirmButton,
-        cancelButton: oCancelButton,
-        addInput: fnAddInput,
-        addButton: fnAddButton
-    };
-};
-
 const addAddEntryPopup = function (oParent) {
-    const oPopupObject = addPopupObject(oParent);
+    const oPopupObject = createPopupObject(oParent);
 
     oAddEntryPopupObject.entryNameInput = createTextInput('entry', '', null, oPopupObject.view);
     oAddEntryPopupObject.entryPasswordInput = createTextInput('password', '', null,  oPopupObject.view);
@@ -205,9 +149,9 @@ const showPasswordPopup = function (sFilename, nPageVerticalOffset) {
 };
 
 const addPasswordPopup = function (oParent) {
-    const oPopupObject = addPopupObject(oParent);
+    const oPopupObject = createPopupObject(oParent);
 
-    oPopupObject.passwordInput = oPopupObject.addInput('password');
+    oPopupObject.passwordInput = oPopupObject.addInput('password', 'password');
     oPopupObject.passwordInput.onkeyup = oEvent => {
         console.log('key');
         if (oEvent.key === 'Enter') {
