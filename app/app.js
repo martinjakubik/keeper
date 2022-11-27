@@ -71,21 +71,6 @@ const usePasswordPopupToReadFile = async function () {
     oPasswordPopupObject.contentParagraph.classList.add(STYLE_EXPAND_PARAGRAPH);
 };
 
-const handleFilePressed = function (oEvent) {
-    const oTarget = oEvent.target;
-    const nPageVerticalOffset = oEvent.pageY;
-    const oFilenameParagraph = oTarget.parentElement;
-    const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
-    showPasswordPopup(sFilename, nPageVerticalOffset);
-};
-
-const addListItem = (sParentList, sFilename) => {
-    const oListElementObject = createListItem(sParentList, sFilename);
-    if (oListElementObject.anchor) {
-        oListElementObject.anchor.onclick = handleFilePressed;
-    }
-};
-
 const addPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     const oPopup = document.createElement('div');
     if (!oParent) {
@@ -311,6 +296,14 @@ const isMatchForFilter = function (s, sFilter) {
     return bIsMatchForFilter;
 };
 
+const handleFilePressed = function (oEvent) {
+    const oTarget = oEvent.target;
+    const nPageVerticalOffset = oEvent.pageY;
+    const oFilenameParagraph = oTarget.parentElement;
+    const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
+    showPasswordPopup(sFilename, nPageVerticalOffset);
+};
+
 const renderFileList = function (sKeeperDirectory, sFilter) {
     if (!sKeeperDirectory || sKeeperDirectory.length < 1) {
         return;
@@ -320,7 +313,10 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             for (const sFilename of aFiles) {
                 if (isMatchForFilter(sFilename, sFilter)) {
-                    addListItem('fileList', sFilename);
+                    const oListElementObject = createListItem('fileList', sFilename);
+                    if (oListElementObject.anchor) {
+                        oListElementObject.anchor.onclick = handleFilePressed;
+                    }
                 }
             }
         });
