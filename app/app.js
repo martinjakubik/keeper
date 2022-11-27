@@ -58,7 +58,7 @@ const startPasswordPopupCountdown = function () {
     nPasswordPopupCloseCountdown = PASSWORD_POPUP_TIMEOUT_SECONDS;
     nPasswordPopupCloseTimeoutId = setTimeout(handlePasswordPopupTimeoutExpired, PASSWORD_POPUP_TIMEOUT_SECONDS * 1000);
     nPasswordPopupCloseCountdownIntervalId = setInterval(handlePasswordPopupCountdownInterval, 1000);
-    const sShape = getShape(PASSWORD_POPUP_TIMEOUT_SECONDS, PASSWORD_POPUP_TIMEOUT_SECONDS);
+    const sShape = getCountdownShape(PASSWORD_POPUP_TIMEOUT_SECONDS, PASSWORD_POPUP_TIMEOUT_SECONDS);
     oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
 };
 
@@ -102,7 +102,7 @@ const getFormattedPoint = function (aPoint, index, nNumberOfPoints) {
     return Math.floor(aPoint[0] + nCosine * nScale) + 'px ' + Math.floor(aPoint[1] + nSine * nScale) + 'px';
 };
 
-const getShape = function (nTicks, nTotalTicks) {
+const getCountdownShape = function (nTicks, nTotalTicks) {
     const nNumberOfPoints = 30;
     const aStartPoint = [80, 30];
     let aFormattedPoints = [];
@@ -121,7 +121,7 @@ const getShape = function (nTicks, nTotalTicks) {
 };
 
 const updatePasswordPopupCountdown = function () {
-    const sShape = getShape((PASSWORD_POPUP_TIMEOUT_SECONDS - nPasswordPopupCloseCountdown), PASSWORD_POPUP_TIMEOUT_SECONDS);
+    const sShape = getCountdownShape((PASSWORD_POPUP_TIMEOUT_SECONDS - nPasswordPopupCloseCountdown), PASSWORD_POPUP_TIMEOUT_SECONDS);
     oPasswordPopupObject.countdownDiv.style.clipPath = sShape;
 };
 
