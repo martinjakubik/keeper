@@ -2,7 +2,7 @@ const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
 const { createList, createListItem, createSearchInput, createPopupObject, getCountdownShape } = require('./keeperhypertext.js');
-const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
+const { createButton, createTextInput, createParagraph } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
 
@@ -12,7 +12,7 @@ const MAX_CONTENT_LENGTH = 1024;
 const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 const MAX_FILE_FILTER_STRING_LENGTH = 30;
 const MAX_FILENAME_DISPLAY_LENGTH = 30;
-const MAX_DIRECTORY_FILE_DISPLAY_COUNT = 20;
+const MAX_DIRECTORY_FILE_DISPLAY_COUNT = 120;
 
 let oFileSystem;
 let oFileFilterInputObject;
@@ -262,10 +262,16 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
             const aFilteredListOfFileEntries = makeFilteredListOfFiles(aFiles, sFilter);
             for (const oFileEntry of aFilteredListOfFileEntries) {
-                const sFilename = oFileEntry.displayText;
-                const oListElementObject = createListItem('fileList', sFilename);
-                if (oListElementObject.anchor) {
-                    oListElementObject.anchor.onclick = handleFilePressed;
+                if (oFileEntry.isExcessCountIndicator) {
+                    const sExcessCountText = oFileEntry.displayText;
+                    const oParentList = document.getElementById('fileList');
+                    createParagraph('excessFileCount', sExcessCountText, oParentList);
+                } else {
+                    const sFilename = oFileEntry.displayText;
+                    const oListElementObject = createListItem('fileList', sFilename);
+                    if (oListElementObject.anchor) {
+                        oListElementObject.anchor.onclick = handleFilePressed;
+                    }
                 }
             }
         });
