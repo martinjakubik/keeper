@@ -127,7 +127,6 @@ const addPasswordPopup = function (oParent) {
 
     oPopupObject.passwordInput = oPopupObject.addInput('password', 'password');
     oPopupObject.passwordInput.onkeyup = oEvent => {
-        console.log('key');
         if (oEvent.key === 'Enter') {
             oPopupObject.confirmButton.click();
         }
