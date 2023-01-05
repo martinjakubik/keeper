@@ -12,6 +12,7 @@ const MAX_CONTENT_LENGTH = 1024;
 const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 const MAX_FILE_FILTER_STRING_LENGTH = 30;
 const MAX_FILENAME_DISPLAY_LENGTH = 30;
+const MAX_DIRECTORY_FILE_DISPLAY_COUNT = 20;
 
 let oFileSystem;
 let oFileFilterInputObject;
@@ -225,18 +226,31 @@ const handleFilePressed = function (oEvent) {
 };
 
 const makeFilteredListOfFiles = function (aFiles, sFilter) {
-    const aFilteredListOfFiles = [];
+    const aFilteredListOfFileEntries = [];
+    let nFileCount = 0;
     for (const sFilename of aFiles) {
         if (isMatchForFilter(sFilename, sFilter)) {
-            const sTruncatedFilename = sFilename.substring(0, MAX_FILENAME_DISPLAY_LENGTH);
-            const oTruncatedFilename = {
-                filename: sTruncatedFilename,
-                isTruncated: sFilename.length > MAX_FILENAME_DISPLAY_LENGTH ? true : false
-            };
-            aFilteredListOfFiles.push(oTruncatedFilename);
+            nFileCount = nFileCount + 1;
+            if (nFileCount < MAX_DIRECTORY_FILE_DISPLAY_COUNT) {
+                const sTruncatedFilename = sFilename.substring(0, MAX_FILENAME_DISPLAY_LENGTH);
+                const oListEntry = {
+                    displayText: sTruncatedFilename,
+                    isTruncated: sFilename.length > MAX_FILENAME_DISPLAY_LENGTH ? true : false,
+                    isExcessCountIndicator: false
+                };
+                aFilteredListOfFileEntries.push(oListEntry);
+            } else {
+                const oListExcessCountEntry = {
+                    displayText: 'Type a filter to see more ...',
+                    isTruncated: false,
+                    isExcessCountIndicator: true
+                };
+                aFilteredListOfFileEntries.push(oListExcessCountEntry);
+                break;
+            }
         }
     }
-    return aFilteredListOfFiles;
+    return aFilteredListOfFileEntries;
 };
 
 const renderFileList = function (sKeeperDirectory, sFilter) {
@@ -246,9 +260,9 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
     try {
         clearList('fileList');
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
-            const aFilteredListOfFiles = makeFilteredListOfFiles(aFiles, sFilter);
-            for (const oFilename of aFilteredListOfFiles) {
-                const sFilename = oFilename.filename;
+            const aFilteredListOfFileEntries = makeFilteredListOfFiles(aFiles, sFilter);
+            for (const oFileEntry of aFilteredListOfFileEntries) {
+                const sFilename = oFileEntry.displayText;
                 const oListElementObject = createListItem('fileList', sFilename);
                 if (oListElementObject.anchor) {
                     oListElementObject.anchor.onclick = handleFilePressed;
