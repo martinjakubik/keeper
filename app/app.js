@@ -13,6 +13,8 @@ const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 const MAX_FILE_FILTER_STRING_LENGTH = 30;
 const MAX_FILENAME_DISPLAY_LENGTH = 30;
 const MAX_DIRECTORY_FILE_DISPLAY_COUNT = 120;
+const DIALOG_HEIGHT_PX = 240;
+const DIALOG_MARGIN_PX_COMFORTABLE = 20;
 
 let oFileSystem;
 let oFileFilterInputObject;
@@ -211,7 +213,10 @@ const isMatchForFilter = function (s, sFilter) {
 
 const handleFilePressed = function (oEvent) {
     const oTarget = oEvent.target;
-    const nPageVerticalOffset = oEvent.pageY ? oEvent.pageY : '230px';
+    let nPageVerticalOffset = oEvent.pageY ? oEvent.pageY : '230px';
+    if (nPageVerticalOffset + DIALOG_HEIGHT_PX > window.innerHeight) {
+        nPageVerticalOffset = window.innerHeight - DIALOG_HEIGHT_PX - DIALOG_MARGIN_PX_COMFORTABLE;
+    }
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
     showPasswordPopup(sFilename, nPageVerticalOffset);
