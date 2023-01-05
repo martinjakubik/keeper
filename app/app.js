@@ -21,6 +21,7 @@ let oPasswordPopupObject = {};
 let nPasswordPopupCloseTimeoutId = -1;
 let nPasswordPopupCloseCountdownIntervalId = -1;
 let nPasswordPopupCloseCountdown = 0;
+let sPreviousKeeperDirectoryInputValue = '';
 
 const validateContent = function (sContent) {
     let sValidatedContent = '';
@@ -175,6 +176,7 @@ const handleKeeperDirectoryInputChange = function () {
 };
 
 const handleChooseKeeperDirectoryButtonTapped = async function () {
+    sPreviousKeeperDirectoryInputValue = oKeeperDirectoryInput.value;
     ipcRenderer.send('showOpenDialog');
 };
 
@@ -182,10 +184,10 @@ ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
     const sSelectedDirectory = (oArgument && !oArgument.canceled) ? oArgument.selectedDirectory : null;
     if (sSelectedDirectory) {
         oKeeperDirectoryInput.value = sSelectedDirectory;
+        handleKeeperListChange();
     } else {
-        oKeeperDirectoryInput.value = '';
+        oKeeperDirectoryInput.value = sPreviousKeeperDirectoryInputValue;
     }
-    handleKeeperListChange();
 });
 
 const handleClearFileFilterButtonTapped = function () {
