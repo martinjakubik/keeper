@@ -10,6 +10,15 @@ const createList = function (sId, oParent) {
     return oList;
 };
 
+const clearList = function (sSelector) {
+    const oListElement = document.getElementById(sSelector);
+    if (oListElement) {
+        while (oListElement.lastChild) {
+            oListElement.removeChild(oListElement.lastChild);
+        }
+    }
+};
+
 const createListItem = (sParentList, sFilename) => {
     let oListElementObject = {};
     const oParentList = document.getElementById(sParentList);
@@ -143,6 +152,7 @@ const getCountdownShape = function (nTicks, nTotalTicks) {
 };
 
 exports.createList = createList;
+exports.clearList = clearList;
 exports.createListItem = createListItem;
 exports.createSearchInput = createSearchInput;
 exports.createPopupObject = createPopupObject;

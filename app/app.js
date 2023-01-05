@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createList, createListItem, createSearchInput, createPopupObject, getCountdownShape } = require('./keeperhypertext.js');
+const { createList, clearList, createListItem, createSearchInput, createPopupObject, getCountdownShape } = require('./keeperhypertext.js');
 const { createButton, createTextInput, createParagraph } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
@@ -189,20 +189,12 @@ ipcRenderer.on('choose-keeper-directory-response', (oResponse, oArgument) => {
     } else {
         oKeeperDirectoryInput.value = sPreviousKeeperDirectoryInputValue;
     }
+    oFileFilterInputObject.input.focus();
 });
 
 const handleClearFileFilterButtonTapped = function () {
     oFileFilterInputObject.input.value = '';
     handleKeeperListChange();
-};
-
-const clearList = function (sSelector) {
-    const oListElement = document.getElementById(sSelector);
-    if (oListElement) {
-        while (oListElement.lastChild) {
-            oListElement.removeChild(oListElement.lastChild);
-        }
-    }
 };
 
 const isMatchForFilter = function (s, sFilter) {
