@@ -29,6 +29,11 @@ const createListItem = (sParentList, sFilename, fnItemTapped) => {
         const oAnchor = document.createElement('a');
         oAnchor.tabIndex = 0;
         oAnchor.onclick = fnItemTapped;
+        oAnchor.onkeyup = oEvent => {
+            if (oEvent.key === 'Enter') {
+                fnItemTapped(oEvent);
+            }
+        };
         oListElement.appendChild(oFilenameParagraph);
         oFilenameParagraph.appendChild(oAnchor);
         oAnchor.innerText = sFilename;

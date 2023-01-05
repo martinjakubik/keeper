@@ -211,7 +211,7 @@ const isMatchForFilter = function (s, sFilter) {
 
 const handleFilePressed = function (oEvent) {
     const oTarget = oEvent.target;
-    const nPageVerticalOffset = oEvent.pageY;
+    const nPageVerticalOffset = oEvent.pageY ? oEvent.pageY : '230px';
     const oFilenameParagraph = oTarget.parentElement;
     const sFilename = oFilenameParagraph.id.substring('filename'.length + 1);
     showPasswordPopup(sFilename, nPageVerticalOffset);
