@@ -11,6 +11,7 @@ const FILE_EXTENSION_ENCRYPTED = 'asc';
 const MAX_CONTENT_LENGTH = 1024;
 const PASSWORD_POPUP_TIMEOUT_SECONDS = 600;
 const MAX_FILE_FILTER_STRING_LENGTH = 30;
+const MAX_FILENAME_DISPLAY_LENGTH = 30;
 
 let oFileSystem;
 let oFileFilterInputObject;
@@ -221,6 +222,21 @@ const handleFilePressed = function (oEvent) {
     showPasswordPopup(sFilename, nPageVerticalOffset);
 };
 
+const makeFilteredListOfFiles = function (aFiles, sFilter) {
+    const aFilteredListOfFiles = [];
+    for (const sFilename of aFiles) {
+        if (isMatchForFilter(sFilename, sFilter)) {
+            const sTruncatedFilename = sFilename.substring(0, MAX_FILENAME_DISPLAY_LENGTH);
+            const oTruncatedFilename = {
+                filename: sTruncatedFilename,
+                isTruncated: sFilename.length > MAX_FILENAME_DISPLAY_LENGTH ? true : false
+            };
+            aFilteredListOfFiles.push(oTruncatedFilename);
+        }
+    }
+    return aFilteredListOfFiles;
+};
+
 const renderFileList = function (sKeeperDirectory, sFilter) {
     if (!sKeeperDirectory || sKeeperDirectory.length < 1) {
         return;
@@ -228,12 +244,12 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
     try {
         clearList('fileList');
         oFileSystem.readdir(sKeeperDirectory).then(async (aFiles) => {
-            for (const sFilename of aFiles) {
-                if (isMatchForFilter(sFilename, sFilter)) {
-                    const oListElementObject = createListItem('fileList', sFilename);
-                    if (oListElementObject.anchor) {
-                        oListElementObject.anchor.onclick = handleFilePressed;
-                    }
+            const aFilteredListOfFiles = makeFilteredListOfFiles(aFiles, sFilter);
+            for (const oFilename of aFilteredListOfFiles) {
+                const sFilename = oFilename.filename;
+                const oListElementObject = createListItem('fileList', sFilename);
+                if (oListElementObject.anchor) {
+                    oListElementObject.anchor.onclick = handleFilePressed;
                 }
             }
         });
