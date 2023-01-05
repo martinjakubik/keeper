@@ -27,6 +27,7 @@ const createListItem = (sParentList, sFilename) => {
         const oFilenameParagraph = document.createElement('p');
         oFilenameParagraph.id = `filename-${sFilename}`;
         const oAnchor = document.createElement('a');
+        oAnchor.tabIndex = 0;
         oListElement.appendChild(oFilenameParagraph);
         oFilenameParagraph.appendChild(oAnchor);
         oAnchor.innerText = sFilename;
