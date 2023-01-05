@@ -1,7 +1,7 @@
 const oOpenPgp = require('openpgp');
 const { readFile } = require('fs/promises');
 const { ipcRenderer } = require('electron');
-const { createList, createListItem, createSearchInput, createPopupObject, getCountdownShape } = require('./hypertext.js');
+const { createList, createListItem, createSearchInput, createPopupObject, getCountdownShape } = require('./keeperhypertext.js');
 const { createButton, createTextInput } = require('../lib/js/learnhypertext.js');
 
 const sDefaultKeeperDirectory = '/Users/martin/.fakekeeper';
