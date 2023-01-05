@@ -28,22 +28,33 @@ const createListItem = (sParentList, sFilename) => {
     return oListElementObject;
 };
 
-const createSearchInput = function (sLabel, oParent) {
+const createSearchInput = function (sLabel, fnOnInputChanged, fnOnClearButtonTapped, oParent) {
     if (!oParent) {
         oParent = document.body;
     }
 
     const oSearchInputContainer = document.createElement('div');
     oSearchInputContainer.classList.add('searchInput');
-    const oInput = createTextInput('searchInput', '', null, oSearchInputContainer);
-    const oButton = createButton('btnClearSearch', sLabel, oSearchInputContainer);
+    const oInputFilterText = createTextInput('searchInput', '', null, oSearchInputContainer);
+    const oBtnClear = createButton('btnClearSearch', sLabel, oSearchInputContainer);
+
+    oInputFilterText.onkeyup = oEvent => {
+        if (oEvent.key === 'Escape') {
+            oInputFilterText.value = '';
+            fnOnClearButtonTapped();
+        }
+    };
+
+    oInputFilterText.oninput = fnOnInputChanged;
+
+    oBtnClear.onclick = fnOnClearButtonTapped;
 
     oParent.appendChild(oSearchInputContainer);
 
     return {
         view: oSearchInputContainer,
-        input: oInput,
-        button: oButton
+        input: oInputFilterText,
+        button: oBtnClear
     };
 };
 
