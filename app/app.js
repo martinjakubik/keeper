@@ -260,10 +260,7 @@ const renderFileList = function (sKeeperDirectory, sFilter) {
                     createParagraph('excessFileCount', sExcessCountText, oParentList);
                 } else {
                     const sFilename = oFileEntry.displayText;
-                    const oListElementObject = createListItem('fileList', sFilename);
-                    if (oListElementObject.anchor) {
-                        oListElementObject.anchor.onclick = handleFilePressed;
-                    }
+                    createListItem('fileList', sFilename, handleFilePressed);
                 }
             }
         });

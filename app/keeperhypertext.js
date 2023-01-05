@@ -19,7 +19,7 @@ const clearList = function (sSelector) {
     }
 };
 
-const createListItem = (sParentList, sFilename) => {
+const createListItem = (sParentList, sFilename, fnItemTapped) => {
     let oListElementObject = {};
     const oParentList = document.getElementById(sParentList);
     if (oParentList) {
@@ -28,6 +28,7 @@ const createListItem = (sParentList, sFilename) => {
         oFilenameParagraph.id = `filename-${sFilename}`;
         const oAnchor = document.createElement('a');
         oAnchor.tabIndex = 0;
+        oAnchor.onclick = fnItemTapped;
         oListElement.appendChild(oFilenameParagraph);
         oFilenameParagraph.appendChild(oAnchor);
         oAnchor.innerText = sFilename;
