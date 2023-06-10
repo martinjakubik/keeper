@@ -106,7 +106,7 @@ const createPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
         oLabel.innerText = sLabel;
         oPopup.insertBefore(oLabel, oContentParagraph);
         const oInput = document.createElement('input');
-        if(sType) {
+        if (sType) {
             oInput.type = sType;
         }
         oPopup.insertBefore(oInput, oContentParagraph);
@@ -132,9 +132,9 @@ const createPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     };
 };
 
-const getFormattedPoint = function (aPoint, index, nNumberOfPoints) {
+const getFormattedCountdownPoint = function (aPoint, index, nNumberOfPoints) {
     const nScale = 20;
-    const nIncrement = index * 2 * Math.PI / nNumberOfPoints - Math.PI / 2;
+    const nIncrement = Math.PI * (index * 2 / nNumberOfPoints - 0.5);
     const nCosine = Math.cos(nIncrement);
     const nSine = Math.sin(nIncrement);
     return Math.floor(aPoint[0] + nCosine * nScale) + 'px ' + Math.floor(aPoint[1] + nSine * nScale) + 'px';
@@ -145,12 +145,12 @@ const getCountdownShape = function (nTicks, nTotalTicks) {
     const aStartPoint = [80, 30];
     let aFormattedPoints = [];
     const nTicksByPoints = Math.floor(nTotalTicks / nNumberOfPoints);
-    aFormattedPoints.push(getFormattedPoint(aStartPoint, 0, nNumberOfPoints));
+    aFormattedPoints.push(getFormattedCountdownPoint(aStartPoint, 0, nNumberOfPoints));
     aFormattedPoints.push(Math.floor(aStartPoint[0]) + 'px ' + Math.floor(aStartPoint[1]) + 'px');
     if (nTicks > 0) {
         for (let nPoint = 1; nPoint < nNumberOfPoints; nPoint++) {
             if (nTicks < nPoint * nTicksByPoints) {
-                aFormattedPoints.push(getFormattedPoint(aStartPoint, nPoint, nNumberOfPoints));
+                aFormattedPoints.push(getFormattedCountdownPoint(aStartPoint, nPoint, nNumberOfPoints));
             }
         }
     }
