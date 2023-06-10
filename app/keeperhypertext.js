@@ -132,8 +132,7 @@ const createPopupObject = function (oParent, fnConfirmAction, fnCancelAction) {
     };
 };
 
-const getFormattedCountdownPoint = function (aPoint, index, nNumberOfPoints) {
-    const nScale = 20;
+const getFormattedCountdownPoint = function (aPoint, index, nNumberOfPoints, nScale = 20) {
     const nIncrement = Math.PI * (index * 2 / nNumberOfPoints - 0.5);
     const nCosine = Math.cos(nIncrement);
     const nSine = Math.sin(nIncrement);
